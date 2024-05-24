@@ -8,15 +8,16 @@ val tapirVersion = "1.10.7"
 val laminarVersion = "17.0.0"
 
 val Versions = new {
-  val zio = "2.1.1"
-  val tapir = "1.10.7"
+  val zio        = "2.1.1"
+  val tapir      = "1.10.7"
   val zioLogging = "2.2.4"
-  val zioConfig = "4.0.2"
-  val sttp = "3.9.6"
-  val javaMail = "1.6.2"
-  val stripe = "25.7.0"
-  val flywaydb = "10.13.0"
+  val zioConfig  = "4.0.2"
+  val sttp       = "3.9.6"
+  val javaMail   = "1.6.2"
+  val stripe     = "25.7.0"
+  val flywaydb   = "10.13.0"
 }
+
 
 inThisBuild(
   List(
@@ -55,6 +56,9 @@ lazy val generator = project
 //   (see vite.config.js)
 val mode = sys.env.get("MOD").getOrElse("demo")
 
+//
+// On dev mode, server will only serve API and static files.
+//
 val serverPlugins = mode match {
   case "prod" =>
     Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin)
@@ -118,9 +122,9 @@ val staticGenerationSettings =
     Seq()
 
 val commonDependencies = Seq(
-  "com.softwaremill.sttp.tapir" %% "tapir-sttp-client" % Versions.tapir,
-  "com.softwaremill.sttp.tapir" %% "tapir-json-zio" % Versions.tapir,
-  "com.softwaremill.sttp.client3" %% "zio" % Versions.sttp
+  "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
+  "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
+  "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp
 )
 
 lazy val server = project
@@ -131,8 +135,6 @@ lazy val server = project
   )
   .settings(
     fork := true,
-//    scalaJSProjects := Seq(client),
-//    Assets / pipelineStages := Seq(scalaJSPipeline),
     libraryDependencies ++= commonDependencies ++ Seq(
       "io.github.iltotore" %% "iron-zio-json" % "2.5.0",
       "com.softwaremill.sttp.tapir" %% "tapir-zio" % tapirVersion,
@@ -175,11 +177,11 @@ lazy val client = scalajsProject("client")
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.tapir" %%% "tapir-sttp-client" % Versions.tapir,
-      "com.softwaremill.sttp.tapir" %%% "tapir-json-zio" % Versions.tapir,
-      "com.softwaremill.sttp.client3" %%% "zio" % Versions.sttp,
-      "dev.zio" %%% "zio-json" % "0.6.2",
-      "dev.zio" %%% "zio-prelude" % "1.0.0-RC26",
+      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client" % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"    % Versions.tapir,
+      "com.softwaremill.sttp.client3" %%% "zio"               % Versions.sttp,
+      "dev.zio"                       %%% "zio-json"          % "0.6.2",
+      "dev.zio"                       %%% "zio-prelude"       % "1.0.0-RC26",
       // pull laminar 17.0.0
       "dev.cheleb" %%% "laminar-form-derivation-ui5" % "0.12.0"
     )

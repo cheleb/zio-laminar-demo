@@ -6,9 +6,9 @@ import sttp.tapir.files.*
 import sttp.tapir.*
 
 import sttp.tapir.server.ziohttp.*
+import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import com.example.ziolaminardemo.service.*
-import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 object HttpServer extends ZIOAppDefault {
 
@@ -22,11 +22,7 @@ object HttpServer extends ZIOAppDefault {
       _ <- ZIO.succeed(println("Hello world"))
       endpoints <- HttpApi.endpointsZIO
       docEndpoints = SwaggerInterpreter()
-        .fromServerEndpoints(
-          endpoints,
-          "zio-laminar-demo <3",
-          "1.0.0"
-        )
+        .fromServerEndpoints(endpoints, "zio-laminar-demo", "1.0.0")
       _ <- Server.serve(
         ZioHttpInterpreter(ZioHttpServerOptions.default)
           .toHttp(webJarRoutes :: endpoints ::: docEndpoints)
