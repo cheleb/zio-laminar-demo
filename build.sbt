@@ -100,7 +100,7 @@ val staticGenerationSettings =
     Seq(
       Assets / resourceGenerators += Def
         .taskDyn[Seq[File]] {
-          val baseDir   = baseDirectory.value
+          val baseDir    = baseDirectory.value
           val rootFolder = (Assets / resourceManaged).value / "public"
           rootFolder.mkdirs()
           (generator / Compile / runMain).toTask {
@@ -112,7 +112,7 @@ val staticGenerationSettings =
               rootFolder
             ).mkString(" ", " ", "")
           }
-          .map(_ => (rootFolder ** "*.html").get)
+            .map(_ => (rootFolder ** "*.html").get)
         }
         .taskValue
     )
@@ -134,12 +134,12 @@ lazy val server = project
   .settings(
     fork := true,
     libraryDependencies ++= commonDependencies ++ Seq(
-      "io.github.iltotore" %% "iron-zio-json" % "2.5.0",
-      "com.softwaremill.sttp.tapir" %% "tapir-zio" % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server" % tapirVersion,
+      "io.github.iltotore"          %% "iron-zio-json"            % "2.5.0",
+      "com.softwaremill.sttp.tapir" %% "tapir-zio"                % tapirVersion,
+      "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server" % tapirVersion % "test"
+      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % tapirVersion,
+      "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % tapirVersion % "test"
     )
   )
   .settings(serverSettings: _*)
@@ -158,7 +158,28 @@ val usedScalacOptions = Seq(
   "-Wunused:all"
 )
 
+val scalablyTypedPlugin = mode match {
+  case "prod" => ScalablyTypedConverterPlugin
+  case _      => ScalablyTypedConverterExternalNpmPlugin
+}
+
+val scalablyTypedNpmDependenciesSettings = mode match {
+  case "prod" =>
+    Seq(
+      Compile / npmDependencies ++= Seq(
+        "chart.js"        -> "2.9.4",
+        "@types/chart.js" -> "2.9.29"
+      )
+    )
+  case _ =>
+    Seq(externalNpm := {
+      // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
+      baseDirectory.value / "sclaably-typed-external-npm"
+    })
+}
+
 lazy val client = scalajsProject("client")
+  .enablePlugins(scalablyTypedPlugin)
   .settings(
     scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= { config =>
@@ -185,6 +206,9 @@ lazy val client = scalajsProject("client")
       "dev.cheleb" %%% "laminar-form-derivation-ui5" % "0.12.0"
     )
   )
+  .settings(
+    scalablyTypedNpmDependenciesSettings
+  )
   .dependsOn(sharedJs)
   .settings(
     publish / skip := true
@@ -201,7 +225,7 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
     publish / skip := true
   )
 lazy val sharedJvm = shared.jvm
-lazy val sharedJs = shared.js
+lazy val sharedJs  = shared.js
 
 Test / fork := false
 
@@ -225,11 +249,7 @@ def scalajsProject(projectId: String): Project =
     id = projectId,
     base = file(s"modules/$projectId")
   )
-    .enablePlugins(scalaJSPlugin, ScalablyTypedConverterExternalNpmPlugin)
-    .settings(externalNpm := {
-      // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
-      baseDirectory.value
-    })
+    .enablePlugins(scalaJSPlugin)
     .disablePlugins(RevolverPlugin)
     .settings(nexusNpmSettings)
     .settings(Test / requireJsDomEnv := true)
@@ -249,9 +269,9 @@ Global / onLoad := {
   IO.writeLines(
     outputFile,
     s"""  
-  |# Generated file see build.sbt
-  |SCALA_VERSION="$scalaVersionValue"
-  |""".stripMargin.split("\n").toList,
+       |# Generated file see build.sbt
+       |SCALA_VERSION="$scalaVersionValue"
+       |""".stripMargin.split("\n").toList,
     StandardCharsets.UTF_8
   )
 

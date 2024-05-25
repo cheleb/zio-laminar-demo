@@ -20,7 +20,7 @@ object Main {
   val dataSignal = dataVar.signal
   val allValues  = dataSignal.map(_.map(_.value))
 
-  def main(args: Array[String]): Unit =
+  def main2(args: Array[String]): Unit =
     // Laminar initialization
     renderOnDomContentLoaded(dom.document.querySelector("#app"), appElement())
 
