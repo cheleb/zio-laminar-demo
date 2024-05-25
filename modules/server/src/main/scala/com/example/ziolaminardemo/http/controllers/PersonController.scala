@@ -6,9 +6,7 @@ import sttp.tapir.ztapir.*
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 
-class PersonController private (personService: PersonService)
-    extends BaseController
-    with PersonEndpoint {
+class PersonController private (personService: PersonService) extends BaseController with PersonEndpoint {
 
   val create: ServerEndpoint[Any, Task] = createEndpoint
     .zServerLogic(p => personService.register(p))

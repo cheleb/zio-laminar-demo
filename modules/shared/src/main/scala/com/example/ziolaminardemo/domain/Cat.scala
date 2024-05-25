@@ -1,6 +1,5 @@
 package com.example.ziolaminardemo.domain
 
-
 import zio.json.JsonCodec
 import sttp.tapir.Schema
 

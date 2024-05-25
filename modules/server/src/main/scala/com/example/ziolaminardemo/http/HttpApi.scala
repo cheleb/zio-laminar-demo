@@ -16,7 +16,7 @@ object HttpApi {
     healthController      <- HealthController.makeZIO
     personController      <- PersonController.makeZIO
     prometthuesController <- PrometheusController.makeZIO
-  } yield List(healthController, personController, prometthuesController)
+  } yield List(healthController, personController)
 
   val endpointsZIO = makeControllers.map(gatherRoutes)
 }

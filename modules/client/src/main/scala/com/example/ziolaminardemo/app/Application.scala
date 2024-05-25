@@ -7,7 +7,7 @@ import org.scalajs.dom
 
 //import domain.*
 
-def hello: Unit =
+@main def hello: Unit =
 
 //  val personVar = Var(Person("Alice", 42, Left(Cat("Fluffy"))))
 

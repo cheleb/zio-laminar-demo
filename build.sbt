@@ -100,7 +100,7 @@ val staticGenerationSettings =
     Seq(
       Assets / resourceGenerators += Def
         .taskDyn[Seq[File]] {
-          val baseDir    = baseDirectory.value
+          val baseDir   = baseDirectory.value
           val rootFolder = (Assets / resourceManaged).value / "public"
           rootFolder.mkdirs()
           (generator / Compile / runMain).toTask {
@@ -112,7 +112,7 @@ val staticGenerationSettings =
               rootFolder
             ).mkString(" ", " ", "")
           }
-            .map(_ => (rootFolder ** "*.html").get)
+          .map(_ => (rootFolder ** "*.html").get)
         }
         .taskValue
     )
@@ -134,12 +134,12 @@ lazy val server = project
   .settings(
     fork := true,
     libraryDependencies ++= commonDependencies ++ Seq(
-      "io.github.iltotore"          %% "iron-zio-json"            % "2.5.0",
-      "com.softwaremill.sttp.tapir" %% "tapir-zio"                % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % tapirVersion,
+      "io.github.iltotore" %% "iron-zio-json" % "2.5.0",
+      "com.softwaremill.sttp.tapir" %% "tapir-zio" % tapirVersion,
+      "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server" % tapirVersion,
       "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % tapirVersion % "test"
+      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle" % tapirVersion,
+      "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server" % tapirVersion % "test"
     )
   )
   .settings(serverSettings: _*)
@@ -201,7 +201,7 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
     publish / skip := true
   )
 lazy val sharedJvm = shared.jvm
-lazy val sharedJs  = shared.js
+lazy val sharedJs = shared.js
 
 Test / fork := false
 
@@ -249,9 +249,9 @@ Global / onLoad := {
   IO.writeLines(
     outputFile,
     s"""  
-       |# Generated file see build.sbt
-       |SCALA_VERSION="$scalaVersionValue"
-       |""".stripMargin.split("\n").toList,
+  |# Generated file see build.sbt
+  |SCALA_VERSION="$scalaVersionValue"
+  |""".stripMargin.split("\n").toList,
     StandardCharsets.UTF_8
   )
 
