@@ -1,16 +1,16 @@
-package samples
+package com.example.ziolaminardemo.app
 
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom
 
-@main def main: Unit = 
+@main def main: Unit =
 
-  val myApp = 
+  val myApp =
     div(
-      h1("Hello World")
+      Header(),
+      Router(),
+      Footer()
     )
 
   val containerNode = dom.document.getElementById("app")
   render(containerNode, myApp)
-
-

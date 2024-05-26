@@ -206,7 +206,8 @@ lazy val client = scalajsProject("client")
       "dev.zio"                       %%% "zio-json"          % "0.6.2",
       "dev.zio"                       %%% "zio-prelude"       % "1.0.0-RC26",
       // pull laminar 17.0.0
-      "dev.cheleb" %%% "laminar-form-derivation-ui5" % "0.12.0"
+      "dev.cheleb"    %%% "laminar-form-derivation-ui5" % "0.12.0",
+      "io.frontroute" %%% "frontroute"                  % "0.19.0"
     )
   )
   .settings(
