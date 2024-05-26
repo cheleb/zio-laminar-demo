@@ -158,6 +158,9 @@ val usedScalacOptions = Seq(
   "-Wunused:all"
 )
 
+//
+// ScalablyTyped settings
+//
 val scalablyTypedPlugin = mode match {
   case "prod" => ScalablyTypedConverterPlugin
   case _      => ScalablyTypedConverterExternalNpmPlugin

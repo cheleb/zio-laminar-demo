@@ -7,7 +7,7 @@ import dev.cheleb.scalamigen.{*, given}
 
 import com.example.ziolaminardemo.domain.*
 
-@main def hello: Unit =
+def hello: Unit =
 
   val personVar = Var(Person("Alice", 42, Left(Cat("Fluffy"))))
 
