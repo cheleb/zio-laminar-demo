@@ -9,7 +9,7 @@ import sttp.tapir.server.ziohttp.*
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import com.example.ziolaminardemo.service.*
-import com.example.ziolaminardemo.http.Prometheus
+import com.example.ziolaminardemo.http.prometheus.*
 
 object HttpServer extends ZIOAppDefault {
 
@@ -20,7 +20,7 @@ object HttpServer extends ZIOAppDefault {
 
   val serverOptions: ZioHttpServerOptions[Any] =
     ZioHttpServerOptions.customiseInterceptors
-      .metricsInterceptor(Prometheus.metrics.metricsInterceptor())
+      .metricsInterceptor(metricsInterceptor)
       .options
 
   private val serrverProgram =
@@ -30,8 +30,8 @@ object HttpServer extends ZIOAppDefault {
       docEndpoints = SwaggerInterpreter()
                        .fromServerEndpoints(endpoints, "zio-laminar-demo", "1.0.0")
       _ <- Server.serve(
-             ZioHttpInterpreter(ZioHttpServerOptions.default)
-               .toHttp(webJarRoutes :: endpoints ::: docEndpoints)
+             ZioHttpInterpreter(serverOptions)
+               .toHttp(metricsEndpoint :: webJarRoutes :: endpoints ::: docEndpoints)
            )
     } yield ()
 
