@@ -10,6 +10,7 @@ import sttp.tapir.swagger.bundle.SwaggerInterpreter
 
 import com.example.ziolaminardemo.service.*
 import com.example.ziolaminardemo.http.prometheus.*
+import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 object HttpServer extends ZIOAppDefault {
 
@@ -21,6 +22,9 @@ object HttpServer extends ZIOAppDefault {
   val serverOptions: ZioHttpServerOptions[Any] =
     ZioHttpServerOptions.customiseInterceptors
       .metricsInterceptor(metricsInterceptor)
+      .appendInterceptor(
+        CORSInterceptor.default
+      )
       .options
 
   private val serrverProgram =
