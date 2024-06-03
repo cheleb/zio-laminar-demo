@@ -2,15 +2,15 @@ package com.example.ziolaminardemo.http
 
 import zio.*
 import zio.http.*
-import sttp.tapir.files.*
-import sttp.tapir.*
 
+import sttp.tapir.*
+import sttp.tapir.files.*
 import sttp.tapir.server.ziohttp.*
 import sttp.tapir.swagger.bundle.SwaggerInterpreter
+import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 import com.example.ziolaminardemo.service.*
 import com.example.ziolaminardemo.http.prometheus.*
-import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 object HttpServer extends ZIOAppDefault {
 

@@ -223,7 +223,8 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .disablePlugins(RevolverPlugin)
   .in(file("modules/shared"))
   .settings(
-    libraryDependencies ++= commonDependencies
+    libraryDependencies ++= commonDependencies,
+    libraryDependencies += "io.scalaland" %%% "chimney" % "1.0.0"
   )
   .settings(
     publish / skip := true
