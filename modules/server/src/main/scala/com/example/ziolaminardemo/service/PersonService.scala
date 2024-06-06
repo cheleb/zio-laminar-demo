@@ -1,10 +1,12 @@
 package com.example.ziolaminardemo.service
 
 import zio.*
-import com.example.ziolaminardemo.domain.*
+
 import io.scalaland.chimney.dsl._
 import java.time.Instant
 import java.time.ZonedDateTime
+
+import com.example.ziolaminardemo.domain.*
 
 trait PersonService {
   def register(person: Person): Task[User]

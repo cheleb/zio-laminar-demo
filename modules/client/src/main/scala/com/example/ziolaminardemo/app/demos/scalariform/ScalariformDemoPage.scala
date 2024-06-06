@@ -5,7 +5,6 @@ import com.raquo.laminar.api.L.*
 import dev.cheleb.scalamigen.{*, given}
 
 import com.example.ziolaminardemo.domain.*
-import com.example.ziolaminardemo.core.*
 import com.example.ziolaminardemo.core.ZJS.*
 
 object ScalariformDemoPage:
