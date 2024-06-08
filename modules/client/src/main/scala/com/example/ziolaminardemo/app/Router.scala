@@ -30,11 +30,10 @@ object Router:
             div("404 Not Found")
           },
           noneMatched {
-             div("404 Not Found")
+            div("404 Not Found")
           }
         )
       )
     )
   def linkHandler =
     onMountCallback(ctx => externalUrlBus.events.foreach(url => dom.window.location.href = url)(ctx.owner))
-

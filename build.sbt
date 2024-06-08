@@ -3,7 +3,7 @@ import org.scalajs.linker.interface.ModuleSplitStyle
 
 val scala3 = "3.4.2"
 
-name  := "zio-laminar-demo"
+name := "zio-laminar-demo"
 
 val tapirVersion = "1.10.7"
 
@@ -121,7 +121,6 @@ val staticGenerationSettings =
   else
     Seq()
 
-
 lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(serverPlugins: _*)
@@ -169,7 +168,9 @@ val scalablyTypedNpmDependenciesSettings = mode match {
       Compile / npmDependencies ++= Seq(
         "chart.js"        -> "2.9.4",
         "@types/chart.js" -> "2.9.29"
-      )
+      ),
+      scalaJSStage in Global := FullOptStage,
+      webpackBundlingMode    := BundlingMode.LibraryAndApplication()
     )
   case _ =>
     Seq(externalNpm := {
@@ -185,7 +186,12 @@ lazy val client = scalajsProject("client")
     scalaJSLinkerConfig ~= { config =>
       mode match {
         case "prod" =>
-          config.withModuleKind(scalaJSModule)
+          config
+            .withModuleKind(scalaJSModule)
+            .withMinify(true)
+            .withOptimizer(true)
+            .withClosureCompiler(true)
+
         case _ =>
           config
             .withModuleKind(scalaJSModule)
@@ -221,10 +227,10 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .in(file("modules/shared"))
   .settings(
     libraryDependencies ++= Seq(
-     "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
-     "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
-     "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp,
-     "io.scalaland"                  %%% "chimney"           % "1.0.0"
+      "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
+      "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp,
+      "io.scalaland"                 %%% "chimney"           % "1.1.0"
     )
   )
   .settings(
@@ -265,7 +271,8 @@ def scalajsProject(projectId: String): Project =
         "-deprecation",
         "-feature",
         "-Xfatal-warnings"
-      )
+      ),
+      webpack / version := "5.91.0"
     )
 
 Global / onLoad := {

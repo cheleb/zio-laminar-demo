@@ -4,7 +4,6 @@ import com.raquo.laminar.api.L.*
 
 import com.example.ziolaminardemo.app.Router
 
-
 object DemosPage:
 
   def apply(): HtmlElement =
