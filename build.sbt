@@ -1,24 +1,13 @@
 import java.nio.charset.StandardCharsets
 import org.scalajs.linker.interface.ModuleSplitStyle
 
+import Dependencies._
+
 val scala3 = "3.4.2"
 
 name := "zio-laminar-demo"
 
-val tapirVersion = "1.10.7"
-
 val laminarVersion = "17.0.0"
-
-val Versions = new {
-  val zio        = "2.1.1"
-  val tapir      = "1.10.7"
-  val zioLogging = "2.2.4"
-  val zioConfig  = "4.0.2"
-  val sttp       = "3.9.6"
-  val javaMail   = "1.6.2"
-  val stripe     = "25.7.0"
-  val flywaydb   = "10.13.0"
-}
 
 inThisBuild(
   List(
@@ -131,11 +120,11 @@ lazy val server = project
     fork := true,
     libraryDependencies ++= Seq(
       "io.github.iltotore"          %% "iron-zio-json"            % "2.5.0",
-      "com.softwaremill.sttp.tapir" %% "tapir-zio"                % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % tapirVersion,
-      "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % tapirVersion % "test"
+      "com.softwaremill.sttp.tapir" %% "tapir-zio"                % Versions.tapir,
+      "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % Versions.tapir,
+      "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % Versions.tapir,
+      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % Versions.tapir,
+      "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % "test"
     )
   )
   .settings(serverSettings: _*)
@@ -162,13 +151,14 @@ val scalablyTypedPlugin = mode match {
   case _      => ScalablyTypedConverterExternalNpmPlugin
 }
 
-val scalablyTypedNpmDependenciesSettings = mode match {
+val scalaJsSettings = mode match {
   case "prod" =>
     Seq(
       Compile / npmDependencies ++= Seq(
         "chart.js"        -> "2.9.4",
         "@types/chart.js" -> "2.9.29"
       ),
+      webpack / version      := "5.91.0",
       scalaJSStage in Global := FullOptStage,
       webpackBundlingMode    := BundlingMode.LibraryAndApplication()
     )
@@ -214,7 +204,7 @@ lazy val client = scalajsProject("client")
     )
   )
   .settings(
-    scalablyTypedNpmDependenciesSettings
+    scalaJsSettings
   )
   .dependsOn(sharedJs)
   .settings(
@@ -271,8 +261,7 @@ def scalajsProject(projectId: String): Project =
         "-deprecation",
         "-feature",
         "-Xfatal-warnings"
-      ),
-      webpack / version := "5.91.0"
+      )
     )
 
 Global / onLoad := {
