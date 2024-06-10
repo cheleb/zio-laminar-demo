@@ -7,8 +7,6 @@ val scala3 = "3.4.2"
 
 name := "zio-laminar-demo"
 
-val laminarVersion = "17.0.0"
-
 inThisBuild(
   List(
     scalaVersion := scala3,
@@ -24,11 +22,7 @@ lazy val generator = project
   .in(file("build/generator"))
   .enablePlugins(SbtTwirl)
   .disablePlugins(RevolverPlugin)
-  .settings(
-    libraryDependencies += "com.github.scopt" %% "scopt"        % "4.1.0",
-    libraryDependencies += "com.lihaoyi"      %% "os-lib"       % "0.10.1",
-    libraryDependencies += "org.slf4j"         % "slf4j-simple" % "2.0.13"
-  )
+  .settings(staticFilesGeneratorDependencies)
 
 //
 // Define the build mode:
@@ -118,14 +112,7 @@ lazy val server = project
   )
   .settings(
     fork := true,
-    libraryDependencies ++= Seq(
-      "io.github.iltotore"          %% "iron-zio-json"            % "2.5.0",
-      "com.softwaremill.sttp.tapir" %% "tapir-zio"                % Versions.tapir,
-      "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % Versions.tapir,
-      "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % Versions.tapir,
-      "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % Versions.tapir,
-      "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % "test"
-    )
+    serverLibraryDependencies
   )
   .settings(serverSettings: _*)
   .dependsOn(sharedJvm)
@@ -193,11 +180,6 @@ lazy val client = scalajsProject("client")
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client" % Versions.tapir,
-      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"    % Versions.tapir,
-      "com.softwaremill.sttp.client3" %%% "zio"               % Versions.sttp,
-      "dev.zio"                       %%% "zio-json"          % "0.6.2",
-      "dev.zio"                       %%% "zio-prelude"       % "1.0.0-RC26",
       // pull laminar 17.0.0
       "dev.cheleb"    %%% "laminar-form-derivation-ui5" % "0.12.0",
       "io.frontroute" %%% "frontroute"                  % "0.19.0"
@@ -216,11 +198,11 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .disablePlugins(RevolverPlugin)
   .in(file("modules/shared"))
   .settings(
+    sharedJvmAndJsLibraryDependencies
+  )
+  .jsSettings(
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.tapir"   %% "tapir-sttp-client" % Versions.tapir,
-      "com.softwaremill.sttp.tapir"   %% "tapir-json-zio"    % Versions.tapir,
-      "com.softwaremill.sttp.client3" %% "zio"               % Versions.sttp,
-      "io.scalaland"                 %%% "chimney"           % "1.1.0"
+      "io.github.cquiroz" %%% "scala-java-time" % "2.5.0" // implementations of java.time classes for Scala.JS,
     )
   )
   .settings(
