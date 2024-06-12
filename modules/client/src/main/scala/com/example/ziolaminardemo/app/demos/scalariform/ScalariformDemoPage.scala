@@ -1,12 +1,13 @@
 package com.example.ziolaminardemo.app.demos.scalariform
 
+import be.doeraene.webcomponents.ui5.Button
+
 import com.raquo.laminar.api.L.*
 
 import dev.cheleb.scalamigen.{*, given}
 
 import com.example.ziolaminardemo.domain.*
 import com.example.ziolaminardemo.core.ZJS.*
-import be.doeraene.webcomponents.ui5.Button
 
 object ScalariformDemoPage:
   def apply() =
