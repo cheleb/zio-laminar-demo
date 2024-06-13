@@ -9,6 +9,8 @@ import dev.cheleb.scalamigen.{*, given}
 import com.example.ziolaminardemo.domain.*
 import com.example.ziolaminardemo.core.ZJS.*
 
+import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
+
 object ScalariformDemoPage:
   def apply() =
     val personVar = Var(Person("Alice", 42, Left(Cat("Fluffy"))))
@@ -18,22 +20,28 @@ object ScalariformDemoPage:
       styleAttr := "width: 100%; overflow: hidden;",
       div(
         styleAttr := "width: 600px; float: left;",
-        h1("Hello World"),
-        child.text <-- personVar.signal.map(p => s"$p"),
         Form.renderVar(personVar)
       ),
       div(
-        styleAttr := "width: 60px; float: left; margin-top: 200px;",
+        styleAttr := "width: 100px; float: left; margin-top: 200px;",
         Button(
-          "Post",
+          "-- Post -->",
           onClick --> { _ =>
-            println(personVar.now())
-            useBackend(_.person.createEndpoint(personVar.now())).emitTo(userBus)
+            // scalafmt:off
+
+            PersonEndpoint
+              .createEndpoint(personVar.now())
+              .emitTo(userBus)
+
+            // scalafmt:on
+
           }
         )
       ),
       div(
         styleAttr := "width: 600px; float: left;",
+        h1("Databinding"),
+        child.text <-- personVar.signal.map(p => s"$p"),
         h1("Response"),
         child <-- userBus.events.map(renderUser)
       )
