@@ -4,8 +4,8 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
   val Versions = new {
-    val zio        = "2.1.2"
-    val tapir      = "1.10.8"
+    val zio        = "2.1.3"
+    val tapir      = "1.10.9"
     val zioLogging = "2.2.4"
     val zioConfig  = "4.0.2"
     val sttp       = "3.9.6"
