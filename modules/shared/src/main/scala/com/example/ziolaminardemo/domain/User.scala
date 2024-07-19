@@ -9,6 +9,5 @@ case class User(
   age: Int,
   pet: Either[Cat, Dog],
   creationDate: ZonedDateTime
-//  length: Option[Int] = None
 ) derives JsonCodec,
       Schema

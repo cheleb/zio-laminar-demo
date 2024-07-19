@@ -13,7 +13,7 @@ import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
 object ScalariformDemoPage:
   def apply() =
-    val personVar = Var(Person("Alice aup", 42, Left(Cat("Fluffy"))))
+    val personVar = Var(Person("Alice", 42, Left(Cat("Fluffy"))))
     val userBus   = EventBus[User]()
 
     div(
@@ -43,9 +43,7 @@ object ScalariformDemoPage:
         h1("Databinding"),
         child.text <-- personVar.signal.map(p => s"$p"),
         h1("Response"),
-        child <-- userBus.events.map(renderUser),
-        hr(),
-        child.text <-- userBus.events.map(_.toString)
+        child <-- userBus.events.map(renderUser)
       )
     )
 
