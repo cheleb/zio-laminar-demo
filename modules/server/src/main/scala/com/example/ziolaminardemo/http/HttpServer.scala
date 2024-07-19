@@ -11,6 +11,8 @@ import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 import com.example.ziolaminardemo.service.*
 import com.example.ziolaminardemo.http.prometheus.*
+import com.example.ziolaminardemo.services.FlywayService
+import com.example.ziolaminardemo.services.FlywayServiceLive
 
 object HttpServer extends ZIOAppDefault {
 
@@ -27,7 +29,15 @@ object HttpServer extends ZIOAppDefault {
       )
       .options
 
-  private val serverProgram =
+  val runMigrations = for {
+    flyway <- ZIO.service[FlywayService]
+    _ <- flyway.runMigrations().catchSome { case e =>
+           ZIO.logError(s"Error running migrations: ${e.getMessage()}")
+             *> flyway.runRepair() *> flyway.runMigrations()
+         }
+  } yield ()
+
+  private val server =
     for {
       _         <- ZIO.succeed(println("Hello world"))
       endpoints <- HttpApi.endpointsZIO
@@ -39,11 +49,18 @@ object HttpServer extends ZIOAppDefault {
            )
     } yield ()
 
+  private val program =
+    for {
+      _ <- runMigrations
+      _ <- server
+    } yield ()
+
   override def run =
-    serverProgram
+    program
       .provide(
         Server.default,
         // Service layers
+        FlywayServiceLive.configuredLayer,
         PersonServiceLive.layer
       )
 }
