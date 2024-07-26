@@ -1,2 +1,2 @@
-CREATE DATABASE ziolaminardemo;
+CREATE DATABASE "zio-laminar-demo";
 
