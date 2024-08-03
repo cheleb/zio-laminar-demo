@@ -10,6 +10,7 @@ object Dependencies {
     val javaMail   = "1.6.2"
     val osLib      = "0.10.2"
     val postgresql = "42.7.3"
+    val quill      = "4.8.5"
     val scopt      = "4.1.0"
     val slf4j      = "2.0.13"
     val stripe     = "25.10.0"
@@ -33,6 +34,9 @@ object Dependencies {
     "org.flywaydb"   % "flyway-database-postgresql" % Versions.flywaydb,
     "org.postgresql" % "postgresql"                 % Versions.postgresql % Runtime
   )
+  private val quillDependencies = Seq(
+    "io.getquill" %% "quill-jdbc-zio" % Versions.quill
+  )
 
   val serverLibraryDependencies =
     libraryDependencies ++= Seq(
@@ -44,8 +48,8 @@ object Dependencies {
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
       configDependencies ++
-      databaseDependencies
-
+      databaseDependencies ++
+      quillDependencies
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
       "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client" % Versions.tapir,

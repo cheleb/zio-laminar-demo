@@ -8,15 +8,25 @@ import java.time.ZonedDateTime
 
 import com.example.ziolaminardemo.domain.*
 
+import com.example.ziolaminardemo.repositories.UserRepository
+
 trait PersonService {
   def register(person: Person): Task[User]
 }
 
-class PersonServiceLive private extends PersonService {
+class PersonServiceLive private (userRepository: UserRepository) extends PersonService {
   def register(person: Person): Task[User] =
-    ZIO.succeed(person.into[User].withFieldComputed(_.creationDate, _ => ZonedDateTime.now()).transform)
+    userRepository.create(
+      User(
+        id = None,
+        name = person.name,
+        email = person.email,
+        age = person.age,
+        creationDate = ZonedDateTime.now()
+      )
+    )
 }
 
 object PersonServiceLive {
-  val layer: ULayer[PersonService] = ZLayer.succeed(new PersonServiceLive)
+  val layer: RLayer[UserRepository, PersonService] = ZLayer.derive[PersonServiceLive]
 }

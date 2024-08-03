@@ -13,6 +13,8 @@ import com.example.ziolaminardemo.service.*
 import com.example.ziolaminardemo.http.prometheus.*
 import com.example.ziolaminardemo.services.FlywayService
 import com.example.ziolaminardemo.services.FlywayServiceLive
+import com.example.ziolaminardemo.repositories.UserRepositoryLive
+import com.example.ziolaminardemo.repositories.Repository
 
 object HttpServer extends ZIOAppDefault {
 
@@ -60,7 +62,10 @@ object HttpServer extends ZIOAppDefault {
       .provide(
         Server.default,
         // Service layers
+        PersonServiceLive.layer,
         FlywayServiceLive.configuredLayer,
-        PersonServiceLive.layer
+        // Repository layers
+        UserRepositoryLive.layer,
+        Repository.dataLayer
       )
 }
