@@ -1,16 +1,18 @@
 package com.example.ziolaminardemo.repositories
 
-import zio.ZLayer
+import zio.*
 
 import io.getquill.SnakeCase
 import io.getquill.jdbczio.Quill
 import io.getquill.jdbczio.Quill.Postgres
+import javax.sql.DataSource
+import zio.ZLayer
 
 object Repository {
 
-  def quillLayer = Quill.Postgres.fromNamingStrategy(SnakeCase)
+  def quillLayer: URLayer[DataSource, Postgres[SnakeCase.type]] = Quill.Postgres.fromNamingStrategy(SnakeCase)
 
-  private def datasourceLayer = Quill.DataSource.fromPrefix("db")
+  private def datasourceLayer: TaskLayer[DataSource] = Quill.DataSource.fromPrefix("db")
 
-  def dataLayer: ZLayer[Any, Throwable, Postgres[SnakeCase.type]] = datasourceLayer >>> quillLayer
+  def dataLayer: TaskLayer[Postgres[SnakeCase.type]] = datasourceLayer >>> quillLayer
 }

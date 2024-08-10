@@ -15,6 +15,7 @@ import com.example.ziolaminardemo.services.FlywayService
 import com.example.ziolaminardemo.services.FlywayServiceLive
 import com.example.ziolaminardemo.repositories.UserRepositoryLive
 import com.example.ziolaminardemo.repositories.Repository
+import java.io.IOException
 
 object HttpServer extends ZIOAppDefault {
 
@@ -39,9 +40,9 @@ object HttpServer extends ZIOAppDefault {
          }
   } yield ()
 
-  private val server =
+  private val server: ZIO[PersonService & Server, IOException, Unit] =
     for {
-      _         <- ZIO.succeed(println("Hello world"))
+      _         <- Console.printLine("Starting server...")
       endpoints <- HttpApi.endpointsZIO
       docEndpoints = SwaggerInterpreter()
                        .fromServerEndpoints(endpoints, "zio-laminar-demo", "1.0.0")
