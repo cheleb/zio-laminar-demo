@@ -41,13 +41,13 @@ object HttpServer extends ZIOAppDefault {
 
   private val server =
     for {
-      _         <- Console.printLine("Starting server...")
-      endpoints <- HttpApi.endpointsZIO
+      _            <- Console.printLine("Starting server...")
+      apiEndpoints <- HttpApi.endpointsZIO
       docEndpoints = SwaggerInterpreter()
-                       .fromServerEndpoints(endpoints, "zio-laminar-demo", "1.0.0")
+                       .fromServerEndpoints(apiEndpoints, "zio-laminar-demo", "1.0.0")
       _ <- Server.serve(
              ZioHttpInterpreter(serverOptions)
-               .toHttp(metricsEndpoint :: webJarRoutes :: endpoints ::: docEndpoints)
+               .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
            )
     } yield ()
 
