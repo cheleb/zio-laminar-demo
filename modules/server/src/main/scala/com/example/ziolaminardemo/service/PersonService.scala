@@ -7,6 +7,7 @@ import java.time.Instant
 import java.time.ZonedDateTime
 
 import com.example.ziolaminardemo.domain.*
+import com.example.ziolaminardemo.domain.errors.*
 
 import com.example.ziolaminardemo.repositories.UserRepository
 
@@ -16,15 +17,17 @@ trait PersonService {
 
 class PersonServiceLive private (userRepository: UserRepository) extends PersonService {
   def register(person: Person): Task[User] =
-    userRepository.create(
-      User(
-        id = None,
-        name = person.name,
-        email = person.email,
-        age = person.age,
-        creationDate = ZonedDateTime.now()
+    if person.age < 18 then ZIO.fail(TooYoungException(person.age))
+    else
+      userRepository.create(
+        User(
+          id = None,
+          name = person.name,
+          email = person.email,
+          age = person.age,
+          creationDate = ZonedDateTime.now()
+        )
       )
-    )
 }
 
 object PersonServiceLive {

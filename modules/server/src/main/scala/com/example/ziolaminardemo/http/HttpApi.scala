@@ -13,7 +13,7 @@ object HttpApi {
   ): List[ServerEndpoint[Any, Task]] =
     controllers.flatMap(_.routes)
 
-  private def makeControllers: URIO[PersonService, List[BaseController]] = for {
+  private def makeControllers = for {
     healthController <- HealthController.makeZIO
     personController <- PersonController.makeZIO
   } yield List(healthController, personController)
