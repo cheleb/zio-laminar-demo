@@ -34,6 +34,7 @@ object Dependencies {
     "org.flywaydb"   % "flyway-database-postgresql" % Versions.flywaydb,
     "org.postgresql" % "postgresql"                 % Versions.postgresql % Runtime
   )
+
   private val quillDependencies = Seq(
     "io.getquill" %% "quill-jdbc-zio" % Versions.quill
   )
@@ -50,6 +51,7 @@ object Dependencies {
       configDependencies ++
       databaseDependencies ++
       quillDependencies
+
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
       "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client" % Versions.tapir,
