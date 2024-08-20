@@ -6,6 +6,8 @@ import sttp.tapir.Schema
 case class Person(
   name: String,
   email: String,
+  password: String,
+  passwordConfirmation: String,
   age: Int,
   pet: Either[Cat, Dog]
   // ,length: Option[Int] = None

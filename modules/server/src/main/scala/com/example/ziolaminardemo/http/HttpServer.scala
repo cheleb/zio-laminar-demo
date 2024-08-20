@@ -64,6 +64,7 @@ object HttpServer extends ZIOAppDefault {
         // Service layers
         PersonServiceLive.layer,
         FlywayServiceLive.configuredLayer,
+        JWTServiceLive.configuredLayer,
         // Repository layers
         UserRepositoryLive.layer,
         Repository.dataLayer

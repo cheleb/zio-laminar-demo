@@ -7,13 +7,15 @@ import com.raquo.laminar.api.L.*
 import dev.cheleb.scalamigen.{*, given}
 
 import com.example.ziolaminardemo.domain.*
-import com.example.ziolaminardemo.core.ZJS.*
+import dev.cheleb.ziolaminartapir.*
+import dev.cheleb.ziolaminartapir.ZJS.*
 
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
+given Session[UserToken] = SessionLive[UserToken]
 object ScalariformDemoPage:
   def apply() =
-    val personVar = Var(Person("John", "john.does@foo.bar", 42, Left(Cat("Fluffy"))))
+    val personVar = Var(Person("John", "john.does@foo.bar", "notsecured", "notsecured", 42, Left(Cat("Fluffy"))))
     val userBus   = EventBus[User]()
 
     div(

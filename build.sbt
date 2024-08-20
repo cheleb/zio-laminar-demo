@@ -10,7 +10,7 @@ import Dependencies._
 //
 import ServerSettings._
 
-val scala3 = "3.4.2"
+val scala3 = "3.5.0"
 
 name := "zio-laminar-demo"
 
@@ -85,7 +85,7 @@ val usedScalacOptions = Seq(
 //
 // Client project
 // It depends on sharedJs project, a project that contains shared code between server and client.
-// 
+//
 lazy val client = scalajsProject("client")
   .enablePlugins(scalablyTypedPlugin)
   .settings(
@@ -112,6 +112,7 @@ lazy val client = scalajsProject("client")
     libraryDependencies ++= Seq(
       // pull laminar 17.0.0
       "dev.cheleb"    %%% "laminar-form-derivation-ui5" % "0.12.0",
+      "dev.cheleb"    %%% "zio-laminar-tapir"           % "0.0.1-local",
       "io.frontroute" %%% "frontroute"                  % "0.19.0"
     )
   )
@@ -124,7 +125,7 @@ lazy val client = scalajsProject("client")
   )
 
 //
-// Shared project  
+// Shared project
 // It is a cross project that contains shared code between server and client
 //
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
@@ -166,14 +167,13 @@ def scalajsProject(projectId: String): Project =
     )
 
 //
-// This is a global setting that will generate a build-env.sh file in the target directory.    
+// This is a global setting that will generate a build-env.sh file in the target directory.
 // This file will contain the SCALA_VERSION variable that can be used in the build process
-// 
+//
 Global / onLoad := {
   val scalaVersionValue = (client / scalaVersion).value
   val outputFile =
     target.value / "build-env.sh"
-  if (!outputFile.exists()) {
     IO.writeLines(
       outputFile,
       s"""  
@@ -182,6 +182,5 @@ Global / onLoad := {
          |""".stripMargin.split("\n").toList,
       StandardCharsets.UTF_8
     )
-  }
   (Global / onLoad).value
 }
