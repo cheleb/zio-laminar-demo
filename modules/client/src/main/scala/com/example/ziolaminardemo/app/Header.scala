@@ -5,14 +5,23 @@ import be.doeraene.webcomponents.ui5.configkeys.*
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom.HTMLElement
 
-import com.example.ziolaminardemo.http.LoginPassword
 import dev.cheleb.scalamigen.{*, given}
+import dev.cheleb.ziolaminartapir.ZJS.*
+
+import com.example.ziolaminardemo.app.login.LoginPasswordUI
+import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
+import dev.cheleb.ziolaminartapir.Session
+import com.example.ziolaminardemo.domain.UserToken
+
+import dev.cheleb.ziolaminartapir.SessionLive
+
+given session: Session[UserToken] = SessionLive[UserToken]
 
 object Header:
   private val openPopoverBus = new EventBus[HTMLElement]
   private val profileId      = "profileId"
 
-  val credentials = Var(LoginPassword("", ""))
+  val credentials = Var(LoginPasswordUI("", ""))
 
   def apply(): HtmlElement =
     div(
@@ -34,14 +43,24 @@ object Header:
         div(Title(padding := "0.25rem 1rem 0rem 1rem", "Login")),
         div(
           credentials.asForm,
+          Button(
+            "Login",
+            onClick --> { _ =>
+              loginHandler(session)
+            }
+          ),
           UList(
             _.separators := ListSeparator.None,
-            _.item(_.icon := IconName.`sys-find`, "App Finder"),
             _.item(_.icon := IconName.settings, "Settings"),
-            _.item(_.icon := IconName.edit, "Edit Home Page"),
             _.item(_.icon := IconName.`sys-help`, "Help"),
             _.item(_.icon := IconName.log, "Sign out")
           )
         )
       )
     )
+
+  def loginHandler(session: Session[UserToken]): Unit =
+    PersonEndpoint
+      .login(credentials.now().http)
+      .map(token => session.setUserState(token))
+      .runJs

@@ -10,7 +10,6 @@ case class Person(
   passwordConfirmation: Password,
   age: Int,
   pet: Either[Cat, Dog]
-  // ,length: Option[Int] = None
 ) derives JsonCodec,
       Schema
 

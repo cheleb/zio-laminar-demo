@@ -11,7 +11,7 @@ import com.example.ziolaminardemo.domain.*
 import com.example.ziolaminardemo.domain.errors.*
 
 import com.example.ziolaminardemo.repositories.UserRepository
-import com.example.ziolaminardemo.http.LoginPassword
+import com.example.ziolaminardemo.login.LoginPassword
 import dev.cheleb.ziojwt.Hasher
 import java.sql.SQLException
 
@@ -31,7 +31,7 @@ class PersonServiceLive private (userRepository: UserRepository, jwtService: JWT
             id = None,
             name = person.name,
             email = person.email,
-            hashedPassword = Hasher.generatedHash(person.password),
+            hashedPassword = Hasher.generatedHash(person.password.toString),
             age = person.age,
             creationDate = ZonedDateTime.now()
           )

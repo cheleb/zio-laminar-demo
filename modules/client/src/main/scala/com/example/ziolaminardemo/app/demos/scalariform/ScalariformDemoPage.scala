@@ -12,13 +12,12 @@ import dev.cheleb.ziolaminartapir.ZJS.*
 
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
-given Session[UserToken] = SessionLive[UserToken]
+//given Session[UserToken] = SessionLive[UserToken]
 
 given Form[Password] with
   override def render(
     variable: Var[Password],
-    syncParent: () => Unit,
-    values: List[Password] = List.empty
+    syncParent: () => Unit
   )(using factory: WidgetFactory): HtmlElement =
     factory.renderSecret
       .amend(

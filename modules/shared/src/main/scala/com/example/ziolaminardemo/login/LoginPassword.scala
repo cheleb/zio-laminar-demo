@@ -1,4 +1,4 @@
-package com.example.ziolaminardemo.http
+package com.example.ziolaminardemo.login
 
 import sttp.tapir.Schema
 
