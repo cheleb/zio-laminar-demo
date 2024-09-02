@@ -10,6 +10,8 @@ import com.example.ziolaminardemo.domain.*
 import dev.cheleb.ziolaminartapir.*
 import dev.cheleb.ziolaminartapir.ZJS.*
 
+import zio.prelude.*
+
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
 //given Session[UserToken] = SessionLive[UserToken]
@@ -65,7 +67,7 @@ object ScalariformDemoPage:
       div(
         styleAttr := "width: 600px; float: left;",
         h1("Databinding"),
-        child.text <-- personVar.signal.map(p => s"$p"),
+        child.text <-- personVar.signal.map(p => s"${p.render}"),
         h1("Response"),
         child <-- userBus.events.map(renderUser)
       )
