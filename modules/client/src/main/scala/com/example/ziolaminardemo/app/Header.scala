@@ -10,12 +10,8 @@ import dev.cheleb.ziolaminartapir.ZJS.*
 
 import com.example.ziolaminardemo.app.login.LoginPasswordUI
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
-import dev.cheleb.ziolaminartapir.Session
 import com.example.ziolaminardemo.domain.UserToken
-
-import dev.cheleb.ziolaminartapir.SessionLive
-
-given session: Session[UserToken] = SessionLive[UserToken]
+import dev.cheleb.ziolaminartapir.Session
 
 object Header:
   private val openPopoverBus = new EventBus[HTMLElement]
