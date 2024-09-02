@@ -6,8 +6,13 @@ import sttp.tapir.ztapir.*
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 import com.example.ziolaminardemo.service.JWTService
+import dev.cheleb.ziojwt.SecuredBaseController
+import com.example.ziolaminardemo.domain.UserToken
+import com.example.ziolaminardemo.domain.UserID
 
-class PersonController private (personService: PersonService, jwtService: JWTService) extends BaseController {
+class PersonController private (personService: PersonService, jwtService: JWTService)
+    extends BaseController
+    with SecuredBaseController[String, UserID](jwtService.verifyToken) {
 
   val create: ServerEndpoint[Any, Task] = PersonEndpoint.createEndpoint
     .zServerLogic(p => personService.register(p))
@@ -19,8 +24,13 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     } yield token
   }
 
+  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => details =>
+    ZIO.logWarning(s"Getting profile for $userId") *>
+      personService.getProfile(userId)
+  }
+
   val routes: List[ServerEndpoint[Any, Task]] =
-    List(create, login)
+    List(create, login, profile)
 }
 
 object PersonController {

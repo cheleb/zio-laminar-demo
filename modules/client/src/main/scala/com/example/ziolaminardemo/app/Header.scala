@@ -3,7 +3,6 @@ package com.example.ziolaminardemo.app
 import be.doeraene.webcomponents.ui5.*
 import be.doeraene.webcomponents.ui5.configkeys.*
 import com.raquo.laminar.api.L.*
-import org.scalajs.dom.HTMLElement
 
 import dev.cheleb.scalamigen.{*, given}
 import dev.cheleb.ziolaminartapir.ZJS.*
@@ -14,7 +13,7 @@ import com.example.ziolaminardemo.domain.UserToken
 import dev.cheleb.ziolaminartapir.Session
 
 object Header:
-  private val openPopoverBus = new EventBus[HTMLElement]
+  private val openPopoverBus = new EventBus[Boolean]
   private val profileId      = "profileId"
 
   val credentials = Var(LoginPasswordUI("", ""))
@@ -29,28 +28,39 @@ object Header:
 //        _.showProductSwitch  := true,
         _.showCoPilot   := true,
         _.slots.profile := Avatar(idAttr := profileId, img(src := "questionmark.jpg")),
-        _.events.onProfileClick
-          .map(_.detail.targetRef) --> openPopoverBus.writer
+        _.events.onProfileClick.mapTo(true) --> openPopoverBus.writer
       ),
       Popover(
         _.openerId := profileId,
-        _.open <-- openPopoverBus.events.mapTo(true),
+        _.open <-- openPopoverBus.events,
         // _.placement := PopoverPlacementType.Bottom,
         div(Title(padding := "0.25rem 1rem 0rem 1rem", "Login")),
         div(
-          credentials.asForm,
-          Button(
-            "Login",
-            onClick --> { _ =>
-              loginHandler(session)
-            }
-          ),
-          UList(
-            _.separators := ListSeparator.None,
-            _.item(_.icon := IconName.settings, "Settings"),
-            _.item(_.icon := IconName.`sys-help`, "Help"),
-            _.item(_.icon := IconName.log, "Sign out")
-          )
+          child.maybe <--
+            session(
+              UList(
+                _.separators := ListSeparator.None,
+                _.item(_.icon := IconName.settings, a("Settings", href := "/profile")),
+                _.item(_.icon := IconName.`sys-help`, "Help"),
+                _.item(_.icon := IconName.log, "Sign out").amend(
+                  onClick --> { _ =>
+                    session.clearUserState()
+                    openPopoverBus.emit(false)
+                  }
+                )
+              )
+            )(
+              div(
+                credentials.asForm,
+                Button(
+                  "Login",
+                  onClick --> { _ =>
+                    loginHandler(session)
+                    openPopoverBus.emit(false)
+                  }
+                )
+              )
+            )
         )
       )
     )

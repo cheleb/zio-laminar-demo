@@ -18,6 +18,7 @@ import java.sql.SQLException
 trait PersonService {
   def register(person: Person): Task[User]
   def login(email: String, password: String): Task[User]
+  def getProfile(userId: UserID): Task[User]
 }
 
 class PersonServiceLive private (userRepository: UserRepository, jwtService: JWTService) extends PersonService {
@@ -48,6 +49,9 @@ class PersonServiceLive private (userRepository: UserRepository, jwtService: JWT
         _.filter(user => Hasher.validateHash(password, user.hashedPassword))
       }
       .someOrFail(InvalidCredentialsException())
+
+  override def getProfile(userId: UserID): Task[User] =
+    userRepository.findByEmail(userId.email).someOrFail(UserNotFoundException(userId.email))
 
 }
 

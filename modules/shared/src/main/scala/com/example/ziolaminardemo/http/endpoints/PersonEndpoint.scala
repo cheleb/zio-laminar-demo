@@ -35,3 +35,12 @@ object PersonEndpoint extends BaseEndpoint:
     )
     .out(jsonBody[UserToken])
     .description("Login")
+
+  val profile: Endpoint[String, Unit, Throwable, User, Any] = baseSecuredEndpoint
+    .tag("person")
+    .name("profile")
+    .get
+    .in("profile")
+//    .in(query[Boolean]("details"))
+    .out(jsonBody[User])
+    .description("Get profile")

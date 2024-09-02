@@ -26,8 +26,8 @@ object Router:
           path("demos" / "scalariform") {
             scalariform.ScalariformDemoPage()
           },
-          noneMatched {
-            div("404 Not Found")
+          path("profile") {
+            ProfilePage()
           },
           noneMatched {
             div("404 Not Found")
