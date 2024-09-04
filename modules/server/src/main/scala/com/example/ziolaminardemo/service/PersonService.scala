@@ -2,18 +2,20 @@ package com.example.ziolaminardemo.service
 
 import zio.*
 
+import dev.cheleb.ziojwt.Hasher
+
 import io.scalaland.chimney.dsl._
 import java.time.Instant
 import java.time.ZonedDateTime
 
 import com.example.ziolaminardemo.domain.*
-
 import com.example.ziolaminardemo.domain.errors.*
+import com.example.ziolaminardemo.login.LoginPassword
+import com.example.ziolaminardemo.repositories.UserRepository
+
+import java.sql.SQLException
 
 import com.example.ziolaminardemo.repositories.UserRepository
-import com.example.ziolaminardemo.login.LoginPassword
-import dev.cheleb.ziojwt.Hasher
-import java.sql.SQLException
 
 trait PersonService {
   def register(person: Person): Task[User]
@@ -41,7 +43,6 @@ class PersonServiceLive private (userRepository: UserRepository, jwtService: JWT
           ZIO.logError(s"Error code: ${e.getSQLState} while creating user: ${e.getMessage}")
             *> ZIO.fail(UserAlreadyExistsException())
         }
-
   override def login(email: String, password: String): Task[User] =
     userRepository
       .findByEmail(email)

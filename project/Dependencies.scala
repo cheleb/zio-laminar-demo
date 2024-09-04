@@ -34,13 +34,12 @@ object Dependencies {
     "org.flywaydb"   % "flyway-database-postgresql" % Versions.flywaydb,
     "org.postgresql" % "postgresql"                 % Versions.postgresql % Runtime
   )
+  private val quillDependencies = Seq(
+    "io.getquill" %% "quill-jdbc-zio" % Versions.quill
+  )
 
   private val jwtDependencies = Seq(
     "com.auth0" % "java-jwt" % "4.4.0"
-  )
-
-  private val quillDependencies = Seq(
-    "io.getquill" %% "quill-jdbc-zio" % Versions.quill
   )
 
   val serverLibraryDependencies =
@@ -55,8 +54,9 @@ object Dependencies {
     ) ++
       configDependencies ++
       databaseDependencies ++
-      jwtDependencies ++
-      quillDependencies
+      quillDependencies ++
+      jwtDependencies
+
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(

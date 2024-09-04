@@ -2,14 +2,15 @@ package com.example.ziolaminardemo.app.demos
 
 import com.raquo.laminar.api.L.*
 
+import com.example.ziolaminardemo.app.given
 import com.example.ziolaminardemo.domain.*
+import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
+
 import dev.cheleb.ziolaminartapir.*
 import dev.cheleb.ziolaminartapir.ZJS.*
 
 //import zio.prelude.*
 
-import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
-import com.example.ziolaminardemo.app.given
 
 object ProfilePage {
 

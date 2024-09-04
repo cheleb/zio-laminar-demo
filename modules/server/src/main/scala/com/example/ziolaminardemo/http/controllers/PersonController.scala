@@ -1,14 +1,17 @@
 package com.example.ziolaminardemo.http.controllers
 
+import dev.cheleb.ziojwt.SecuredBaseController
+
 import zio.*
+
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.ztapir.*
+
+import com.example.ziolaminardemo.domain.UserToken
+import com.example.ziolaminardemo.domain.UserID
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 import com.example.ziolaminardemo.service.JWTService
-import dev.cheleb.ziojwt.SecuredBaseController
-import com.example.ziolaminardemo.domain.UserToken
-import com.example.ziolaminardemo.domain.UserID
 
 class PersonController private (personService: PersonService, jwtService: JWTService)
     extends BaseController

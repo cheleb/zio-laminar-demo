@@ -18,9 +18,8 @@ done
 
 filename=modules/client/target/scala-$SCALA_VERSION/client-fastopt/main.js
 
-echo "Waiting for client-fastopt/main.js to be compiled... $filename"
+echo "Waiting for client-fastopt/main.js to be compiled..."
 until [ -e $filename ]; do
-
     sleep 1
     echo -n "."
 done

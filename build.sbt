@@ -85,7 +85,7 @@ val usedScalacOptions = Seq(
 //
 // Client project
 // It depends on sharedJs project, a project that contains shared code between server and client.
-//
+// 
 lazy val client = scalajsProject("client")
   .enablePlugins(scalablyTypedPlugin)
   .settings(
@@ -125,7 +125,7 @@ lazy val client = scalajsProject("client")
   )
 
 //
-// Shared project
+// Shared project  
 // It is a cross project that contains shared code between server and client
 //
 lazy val shared = crossProject(JSPlatform, JVMPlatform)
@@ -167,9 +167,9 @@ def scalajsProject(projectId: String): Project =
     )
 
 //
-// This is a global setting that will generate a build-env.sh file in the target directory.
+// This is a global setting that will generate a build-env.sh file in the target directory.    
 // This file will contain the SCALA_VERSION variable that can be used in the build process
-//
+// 
 Global / onLoad := {
   val scalaVersionValue = (client / scalaVersion).value
   val outputFile =

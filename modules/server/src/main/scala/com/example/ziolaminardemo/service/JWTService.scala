@@ -53,15 +53,10 @@ class JWTServiceLive private (jwtConfig: JWTConfig, clock: JavaClock) extends JW
 
   override def verifyToken(token: String): Task[UserID] =
     for {
-      _       <- ZIO.debug(s"Verifying token: $token")
       decoded <- ZIO.attempt(verifier.verify(token))
-      _ <- ZIO.debug(
-             s"Token verified: ${decoded.getSubject()} ${decoded.getClaim(CLAIN_USER_NAME).asString()}"
-           )
       userID <- ZIO.attempt(
                   UserID(decoded.getSubject().toLong, decoded.getClaim(CLAIN_USER_NAME).asString())
                 )
-      _ <- ZIO.debug(s"Token verified: $userID")
     } yield userID
 }
 
