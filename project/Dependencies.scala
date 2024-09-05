@@ -3,20 +3,20 @@ import sbt.Keys._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
-  object Versions  {
+  object Versions {
     val chimney    = "1.3.0"
-    val flywaydb   = "10.14.0"
+    val flywaydb   = "10.17.3"
     val iron       = "2.6.0"
     val javaMail   = "1.6.2"
     val osLib      = "0.10.2"
-    val postgresql = "42.7.3"
+    val postgresql = "42.7.4"
     val quill      = "4.8.5"
     val scopt      = "4.1.0"
-    val slf4j      = "2.0.13"
+    val slf4j      = "2.0.16"
     val stripe     = "25.10.0"
     val sttp       = "3.9.6"
     val tapir      = "1.10.13"
-    val zio        = "2.1.2"
+    val zio        = "2.1.9"
     val zioConfig  = "4.0.2"
     val zioJson    = "0.7.0"
     val zioLogging = "2.2.4"
@@ -56,7 +56,6 @@ object Dependencies {
       databaseDependencies ++
       quillDependencies ++
       jwtDependencies
-
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
