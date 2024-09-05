@@ -20,7 +20,8 @@ object Dependencies {
     val zioConfig  = "4.0.2"
     val zioJson    = "0.7.0"
     val zioLogging = "2.2.4"
-    val zioPrelude = "1.0.0-RC30"
+    val zioJwt     = "0.0.1"
+    val zioPrelude = "1.0.0-RC31"
   }
 
   private val configDependencies = Seq(
@@ -59,13 +60,14 @@ object Dependencies {
 
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client" % Versions.tapir,
-      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"    % Versions.tapir,
-      "com.softwaremill.sttp.client3" %%% "zio"               % Versions.sttp,
-      "dev.zio"                       %%% "zio-json"          % Versions.zioJson,
-      "dev.zio"                       %%% "zio-prelude"       % Versions.zioPrelude,
-      "io.scalaland"                  %%% "chimney"           % Versions.chimney,
-      "dev.cheleb"                    %%% "zio-jwt"           % "0.0.1-local"
+      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client"    % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"       % Versions.tapir,
+      "com.softwaremill.sttp.client3" %%% "zio"                  % Versions.sttp,
+      "dev.zio"                       %%% "zio-json"             % Versions.zioJson,
+      "dev.zio"                       %%% "zio-prelude"          % Versions.zioPrelude,
+      "dev.zio"                       %%% "zio-prelude-magnolia" % Versions.zioPrelude,
+      "io.scalaland"                  %%% "chimney"              % Versions.chimney,
+      "dev.cheleb"                    %%% "zio-jwt"              % Versions.zioJwt
     )
 
   val staticFilesGeneratorDependencies =
