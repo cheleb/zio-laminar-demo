@@ -112,7 +112,7 @@ lazy val client = scalajsProject("client")
     libraryDependencies ++= Seq(
       // pull laminar 17.0.0
       "dev.cheleb"    %%% "laminar-form-derivation-ui5" % "0.14.0-RC3",
-      "dev.cheleb"    %%% "zio-laminar-tapir"           % "0.0.1-local",
+      "dev.cheleb"    %%% "zio-laminar-tapir"           % "0.0.1",
       "io.frontroute" %%% "frontroute"                  % "0.19.0"
     )
   )
