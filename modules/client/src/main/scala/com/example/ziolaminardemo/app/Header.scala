@@ -34,13 +34,18 @@ object Header:
         _.openerId := profileId,
         _.open <-- openPopoverBus.events,
         // _.placement := PopoverPlacementType.Bottom,
-        div(Title(padding := "0.25rem 1rem 0rem 1rem", "Login")),
+        div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in / up")),
         div(
           child.maybe <--
             session(
               UList(
                 _.separators := ListSeparator.None,
-                _.item(_.icon := IconName.settings, a("Settings", href := "/profile")),
+                _.item(_.icon := IconName.settings, a("Settings", href := "/profile"))
+                  .amend(
+                    onClick --> { _ =>
+                      openPopoverBus.emit(false)
+                    }
+                  ),
                 _.item(_.icon := IconName.`sys-help`, "Help"),
                 _.item(_.icon := IconName.log, "Sign out").amend(
                   onClick --> { _ =>
@@ -52,13 +57,22 @@ object Header:
             )(
               div(
                 credentials.asForm,
-                Button(
-                  "Login",
-                  onClick --> { _ =>
-                    loginHandler(session)
-                    openPopoverBus.emit(false)
-                  }
-                )
+                div(
+                  cls := "center",
+                  Button(
+                    "Login",
+                    onClick --> { _ =>
+                      loginHandler(session)
+                      openPopoverBus.emit(false)
+                    }
+                  )
+                ),
+                a("Sign up", href := "/signup")
+                  .amend(
+                    onClick --> { _ =>
+                      openPopoverBus.emit(false)
+                    }
+                  )
               )
             )
         )

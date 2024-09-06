@@ -6,6 +6,7 @@ import frontroute.*
 import org.scalajs.dom
 
 import com.example.ziolaminardemo.app.demos.*
+import com.example.ziolaminardemo.app.signup.SignupPage
 
 object Router:
   private val externalUrlBus = EventBus[String]()
@@ -23,8 +24,8 @@ object Router:
           path("demos" / "scalablytyped") {
             scalablytyped.ScalablytypedDemoPage()
           },
-          path("demos" / "scalariform") {
-            scalariform.ScalariformDemoPage()
+          path("signup") {
+            SignupPage()
           },
           path("profile") {
             ProfilePage()

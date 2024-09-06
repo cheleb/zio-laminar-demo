@@ -13,3 +13,9 @@ ui5-input[type="Number"] {
   width: 100px;
   min-width: 100px;
 }
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

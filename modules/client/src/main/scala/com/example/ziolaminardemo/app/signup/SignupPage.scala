@@ -1,8 +1,10 @@
-package com.example.ziolaminardemo.app.demos.scalariform
+package com.example.ziolaminardemo.app.signup
 
 import be.doeraene.webcomponents.ui5.Button
 
 import com.raquo.laminar.api.L.*
+
+import com.example.ziolaminardemo.app.given
 
 import dev.cheleb.scalamigen.{*, given}
 
@@ -14,23 +16,15 @@ import zio.prelude.*
 
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
-//given Session[UserToken] = SessionLive[UserToken]
+given Form[Password] = secretForm(Password(_))
 
-given Form[Password] with
-  override def render(
-    variable: Var[Password],
-    syncParent: () => Unit
-  )(using factory: WidgetFactory): HtmlElement =
-    factory.renderSecret
-      .amend(
-        value <-- variable.signal.map(_.toString),
-        onInput.mapToValue --> { v =>
-          variable.set(Password(v))
-          syncParent()
-        }
-      )
+given Defaultable[Cat] with
+  def default = Cat("")
 
-object ScalariformDemoPage:
+given Defaultable[Dog] with
+  def default = Dog("", 1)
+
+object SignupPage:
   def apply() =
     val personVar = Var(
       Person("John", "john.does@foo.bar", Password("notsecured"), Password("notsecured"), 42, Left(Cat("Fluffy")))
@@ -39,6 +33,7 @@ object ScalariformDemoPage:
 
     div(
       styleAttr := "width: 100%; overflow: hidden;",
+      h1("Signup"),
       div(
         styleAttr := "width: 600px; float: left;",
         personVar.asForm,
