@@ -3,25 +3,25 @@ import sbt.Keys._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
-  object Versions {
-    val chimney    = "1.3.0"
-    val flywaydb   = "10.17.3"
-    val iron       = "2.6.0"
-    val javaMail   = "1.6.2"
-    val osLib      = "0.10.2"
-    val postgresql = "42.7.4"
-    val quill      = "4.8.5"
-    val scopt      = "4.1.0"
-    val slf4j      = "2.0.16"
-    val stripe     = "25.10.0"
-    val sttp       = "3.9.6"
-    val tapir      = "1.10.13"
-    val zio        = "2.1.9"
-    val zioConfig  = "4.0.2"
-    val zioJson    = "0.7.0"
-    val zioLogging = "2.2.4"
-    val zioJwt     = "0.0.1"
-    val zioPrelude = "1.0.0-RC31"
+  val Versions = new {
+    val chimney             = "1.3.0"
+    val flywaydb            = "10.14.0"
+    val iron                = "2.6.0"
+    val javaMail            = "1.6.2"
+    val osLib               = "0.10.2"
+    val postgresql          = "42.7.3"
+    val quill        = "4.8.5"
+    val scopt               ="4.1.0"
+    val slf4j               = "2.0.13"
+    val stripe              = "25.10.0"
+    val sttp                = "3.9.6"
+    val tapir               = "1.10.13"
+    val zio                 = "2.1.2"
+    val zioConfig           = "4.0.2"
+    val zioJson             = "0.7.0"
+    val zioLaminarTapir     = "0.0.1"
+    val zioLogging          = "2.2.4"
+    val zioPrelude          = "1.0.0-RC31"
   }
 
   private val configDependencies = Seq(
@@ -50,7 +50,7 @@ object Dependencies {
       "com.softwaremill.sttp.tapir" %% "tapir-zio-http-server"    % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-prometheus-metrics" % Versions.tapir,
       "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"  % Versions.tapir,
-      "dev.cheleb"                  %% "zio-jwt-server"           % "0.0.1-local",
+      "dev.cheleb"                  %% "zio-jwt-server"           % Versions.zioLaminarTapir,
       "com.softwaremill.sttp.tapir" %% "tapir-sttp-stub-server"   % Versions.tapir % Test
     ) ++
       configDependencies ++
@@ -58,16 +58,17 @@ object Dependencies {
       quillDependencies ++
       jwtDependencies
 
+
   val sharedJvmAndJsLibraryDependencies =
     libraryDependencies ++= Seq(
-      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client"    % Versions.tapir,
-      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"       % Versions.tapir,
-      "com.softwaremill.sttp.client3" %%% "zio"                  % Versions.sttp,
-      "dev.zio"                       %%% "zio-json"             % Versions.zioJson,
-      "dev.zio"                       %%% "zio-prelude"          % Versions.zioPrelude,
-      "dev.zio"                       %%% "zio-prelude-magnolia" % Versions.zioPrelude,
-      "io.scalaland"                  %%% "chimney"              % Versions.chimney,
-      "dev.cheleb"                    %%% "zio-jwt"              % Versions.zioJwt
+      "com.softwaremill.sttp.tapir"   %%% "tapir-sttp-client" % Versions.tapir,
+      "com.softwaremill.sttp.tapir"   %%% "tapir-json-zio"    % Versions.tapir,
+      "com.softwaremill.sttp.client3" %%% "zio"               % Versions.sttp,
+      "dev.zio"                       %%% "zio-json"          % Versions.zioJson,
+      "dev.zio"                       %%% "zio-prelude"       % Versions.zioPrelude,
+      "dev.zio"                       %%% "zio-prelude-magnolia"       % Versions.zioPrelude,
+      "io.scalaland"                  %%% "chimney"           % Versions.chimney,
+      "dev.cheleb"                    %%% "zio-jwt"           % Versions.zioLaminarTapir
     )
 
   val staticFilesGeneratorDependencies =
