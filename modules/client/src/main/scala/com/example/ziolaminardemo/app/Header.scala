@@ -11,23 +11,26 @@ import com.example.ziolaminardemo.app.login.LoginPasswordUI
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.domain.UserToken
 import dev.cheleb.ziolaminartapir.Session
+import com.example.ziolaminardemo.domain.Password
 
 object Header:
   private val openPopoverBus = new EventBus[Boolean]
   private val profileId      = "profileId"
 
-  val credentials = Var(LoginPasswordUI("", ""))
+  val credentials = Var(LoginPasswordUI("", Password("")))
+
+  given Form[Password] = secretForm(Password(_))
 
   def apply(): HtmlElement =
     div(
       ShellBar(
-        _.slots.startButton  := a(Icon(_.name := IconName.home, cls := "pad-10"), href := "/"),
-        _.primaryTitle       := "ZIO Laminar Demo",
-        _.secondaryTitle     := "Secondary title",
+        _.slots.startButton := a(Icon(_.name := IconName.home, cls := "pad-10"), href := "/"),
+        _.primaryTitle      := "ZIO Laminar Demo",
+//        _.secondaryTitle     := "Secondary title",
         _.notificationsCount := "99+",
         _.showNotifications  := true,
         _.showCoPilot        := true,
-        _.slots.profile      := Avatar(idAttr := profileId, img(src := "questionmark.jpg")),
+        _.slots.profile      := Avatar(idAttr := profileId, img(src := "img/questionmark.jpg")),
         _.events.onProfileClick.mapTo(true) --> openPopoverBus.writer
       ),
       Popover(

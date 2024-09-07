@@ -6,27 +6,54 @@ object HomePage:
 
   def apply(): HtmlElement =
     div(
-      cls := "center",
+      cls := "wrapper",
       div(
-        img(src := "img/scala.svg", width := "200px")
+        cls := "scala",
+        img(src := "img/scala.svg", width := "200px"),
+        "Scala"
       ),
       div(
-        img(src := "img/zio.png")
+        cls := "jvm",
+        img(src := "img/juke.png", width := "50px"),
+        "Backend"
       ),
       div(
-        img(src := "img/tapir.svg", width := "100px"),
-        img(src := "img/sml.png", width   := "200px")
+        cls := "js",
+        img(src := "img/js.jpg", width := "150px"),
+        "Frontend"
       ),
       div(
+        display := "flex",
+        cls     := "server",
         ul(
-          demo("Scalablytyped", "/demos/scalablytyped"),
-          demo("Scalariform", "/demos/scalariform"),
-          a("Metrics", onClick.mapTo("http://localhost:8080/metrics") --> Router.writer)
+          li("zio-http"),
+          li("zio-json"),
+          li("zio-logging")
         )
+      ),
+      div(
+        alignItems := "center",
+        cls        := "shared",
+        div(
+          img(src := "img/zio.png")
+        ),
+        div(
+          display := "flex",
+          div(
+            img(src := "img/tapir.svg", width := "100px")
+          ),
+          p(marginTop := "3em", "Tapir")
+        )
+      ),
+      div(
+        display := "flex",
+        cls     := "client",
+        img(marginRight := "1em", src := "img/laminar.png", width := "50px", height := "50px"),
+        p(marginTop     := "1em", "Laminar")
       )
     )
 
-  private def demo(title: String, link: String) =
+  def demo(title: String, link: String) =
     li(
       a(
         href := link,
