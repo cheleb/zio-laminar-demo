@@ -21,13 +21,13 @@ object Header:
   def apply(): HtmlElement =
     div(
       ShellBar(
+        _.slots.startButton  := a(Icon(_.name := IconName.home, cls := "pad-10"), href := "/"),
         _.primaryTitle       := "ZIO Laminar Demo",
         _.secondaryTitle     := "Secondary title",
         _.notificationsCount := "99+",
         _.showNotifications  := true,
-//        _.showProductSwitch  := true,
-        _.showCoPilot   := true,
-        _.slots.profile := Avatar(idAttr := profileId, img(src := "questionmark.jpg")),
+        _.showCoPilot        := true,
+        _.slots.profile      := Avatar(idAttr := profileId, img(src := "questionmark.jpg")),
         _.events.onProfileClick.mapTo(true) --> openPopoverBus.writer
       ),
       Popover(

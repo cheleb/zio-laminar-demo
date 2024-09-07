@@ -19,7 +19,7 @@ object Router:
           cls := "container-fluid",
           // potentially children
           (pathEnd | path("public") | path("public" / "index.html")) {
-            DemosPage()
+            HomePage()
           },
           path("demos" / "scalablytyped") {
             scalablytyped.ScalablytypedDemoPage()
