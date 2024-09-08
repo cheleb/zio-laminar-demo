@@ -24,9 +24,9 @@ object Header:
   def apply(): HtmlElement =
     div(
       ShellBar(
-        _.slots.startButton := a(Icon(_.name := IconName.home, cls := "pad-10"), href := "/"),
-        _.primaryTitle      := "ZIO Laminar Demo",
-//        _.secondaryTitle     := "Secondary title",
+        _.slots.startButton  := a(Icon(_.name := IconName.home, cls := "pad-10"), href := "/"),
+        _.primaryTitle       := "ZIO Laminar Demo",
+        _.secondaryTitle     := "And Tapir, UI5, and more",
         _.notificationsCount := "99+",
         _.showNotifications  := true,
         _.showCoPilot        := true,
