@@ -46,8 +46,11 @@ object HttpServer extends ZIOAppDefault {
       docEndpoints = SwaggerInterpreter()
                        .fromServerEndpoints(apiEndpoints, "zio-laminar-demo", "1.0.0")
       _ <- Server.serve(
-             ZioHttpInterpreter(serverOptions)
-               .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
+             Routes(
+               Method.GET / Root -> handler(Response.redirect(url"public/index.html"))
+             ) ++
+               ZioHttpInterpreter(serverOptions)
+                 .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
            )
     } yield ()
 
