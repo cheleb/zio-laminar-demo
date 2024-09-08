@@ -1,6 +1,7 @@
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
 import com.typesafe.sbt.web._
 import com.typesafe.sbt.web.Import._
+import java.nio.file.Files
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import org.scalablytyped.converter.plugin._
 import org.scalablytyped.converter.plugin.STKeys._
@@ -61,7 +62,6 @@ object ServerSettings {
       Seq(
         Assets / resourceGenerators += Def
           .taskDyn[Seq[File]] {
-            val baseDir    = baseDirectory.value
             val rootFolder = (Assets / resourceManaged).value / "public"
             rootFolder.mkdirs()
             (generator / Compile / runMain).toTask {
@@ -101,7 +101,6 @@ object ServerSettings {
       )
     case _ =>
       Seq(externalNpm := {
-        // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
         baseDirectory.value / "scalablytyped"
       })
   }
@@ -120,5 +119,10 @@ object ServerSettings {
     case "prod" => ScalaJSBundlerPlugin
     case _      => ScalaJSPlugin
   }
+
+  def symlink(link: File, target: File): Unit =
+    if (!Files.exists(link.toPath))
+      if (Files.exists(target.toPath))
+        Files.createSymbolicLink(link.toPath, link.toPath.getParent.relativize(target.toPath))
 
 }
