@@ -5,10 +5,10 @@ import be.doeraene.webcomponents.ui5.Button
 import com.raquo.laminar.api.L.*
 
 import com.example.ziolaminardemo.app.given
+import com.example.ziolaminardemo.domain.*
 
 import dev.cheleb.scalamigen.{*, given}
 
-import com.example.ziolaminardemo.domain.*
 import dev.cheleb.ziolaminartapir.*
 import dev.cheleb.ziolaminartapir.ZJS.*
 
@@ -74,6 +74,5 @@ object SignupPage:
       div(s"Id: ${user.id}"),
       div(s"Name: ${user.name}"),
       div(s"Age: ${user.age}"),
-//      div(s"Pet: ${user.pet}"),
       div(s"Creation Date: ${user.creationDate}")
     )

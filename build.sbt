@@ -60,7 +60,7 @@ lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(serverPlugins: _*)
   .settings(
-    staticGenerationSettings(generator, client)
+    staticGenerationSettings(generator)
   )
   .settings(
     fork := true,

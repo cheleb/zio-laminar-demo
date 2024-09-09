@@ -101,6 +101,7 @@ object ServerSettings {
       )
     case _ =>
       Seq(externalNpm := {
+        // scala.sys.process.Process(List("npm", "install", "--silent", "--no-audit", "--no-fund"), baseDirectory.value).!
         baseDirectory.value / "scalablytyped"
       })
   }

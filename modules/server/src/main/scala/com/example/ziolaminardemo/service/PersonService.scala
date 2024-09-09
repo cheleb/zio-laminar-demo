@@ -26,7 +26,7 @@ trait PersonService {
 class PersonServiceLive private (userRepository: UserRepository, jwtService: JWTService) extends PersonService {
 
   def register(person: Person): Task[User] =
-    if person.age < 9 then ZIO.fail(TooYoungException(person.age))
+    if person.age < 18 then ZIO.fail(TooYoungException(person.age))
     else
       userRepository
         .create(
