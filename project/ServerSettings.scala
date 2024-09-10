@@ -122,7 +122,7 @@ object ServerSettings {
   }
 
   def symlink(link: File, target: File): Unit =
-    if (!Files.exists(link.toPath))
+    if (!(Files.exists(link.toPath) || Files.isSymbolicLink(link.toPath)))
       if (Files.exists(target.toPath))
         Files.createSymbolicLink(link.toPath, link.toPath.getParent.relativize(target.toPath))
 
