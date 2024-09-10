@@ -19,7 +19,7 @@ object Dependencies {
     val zio                 = "2.1.2"
     val zioConfig           = "4.0.2"
     val zioJson             = "0.7.0"
-    val zioLaminarTapir     = "0.0.1"
+    val zioLaminarTapir     = "0.0.3-local"
     val zioLogging          = "2.2.4"
     val zioPrelude          = "1.0.0-RC31"
   }
