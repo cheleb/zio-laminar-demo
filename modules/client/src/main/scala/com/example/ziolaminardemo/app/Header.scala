@@ -17,7 +17,7 @@ object Header:
   private val openPopoverBus = new EventBus[Boolean]
   private val profileId      = "profileId"
 
-  val credentials = Var(LoginPasswordUI("test@foo.bar", Password("test")))
+  val credentials = Var(LoginPasswordUI("", Password("")))
 
   given Form[Password] = secretForm(Password(_))
 
