@@ -8,8 +8,6 @@ import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
 import dev.cheleb.ziolaminartapir.*
 
-//import zio.prelude.*
-
 object ProfilePage {
 
   val userBus = new EventBus[User]
