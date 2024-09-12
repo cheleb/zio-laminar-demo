@@ -1,28 +1,16 @@
 package com.example.ziolaminardemo.app.signup
 
+import zio.prelude.*
 import be.doeraene.webcomponents.ui5.Button
 
 import com.raquo.laminar.api.L.*
-
 import com.example.ziolaminardemo.app.given
 import com.example.ziolaminardemo.domain.*
 
 import dev.cheleb.scalamigen.{*, given}
-
 import dev.cheleb.ziolaminartapir.*
-import dev.cheleb.ziolaminartapir.ZJS.*
-
-import zio.prelude.*
 
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
-
-given Form[Password] = secretForm(Password(_))
-
-given Defaultable[Cat] with
-  def default = Cat("")
-
-given Defaultable[Dog] with
-  def default = Dog("", 1)
 
 object SignupPage:
   def apply() =

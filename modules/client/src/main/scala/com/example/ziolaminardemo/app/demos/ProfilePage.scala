@@ -7,10 +7,6 @@ import com.example.ziolaminardemo.domain.*
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
 import dev.cheleb.ziolaminartapir.*
-import dev.cheleb.ziolaminartapir.ZJS.*
-
-//import zio.prelude.*
-
 
 object ProfilePage {
 
