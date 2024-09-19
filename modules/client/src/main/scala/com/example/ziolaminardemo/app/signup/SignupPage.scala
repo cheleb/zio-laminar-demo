@@ -17,7 +17,8 @@ object SignupPage:
     val personVar = Var(
       Person("John", "john.does@foo.bar", Password("notsecured"), Password("notsecured"), 42, Left(Cat("Fluffy")))
     )
-    val userBus = EventBus[User]()
+    val userBus  = EventBus[User]()
+    val errorBus = EventBus[Throwable]()
 
     div(
       styleAttr := "width: 100%; overflow: hidden;",
@@ -40,7 +41,7 @@ object SignupPage:
 
             PersonEndpoint
               .createEndpoint(personVar.now())
-              .emitTo(userBus)
+              .emitTo(userBus, errorBus)
 
             // scalafmt:on
 
@@ -52,7 +53,9 @@ object SignupPage:
         h1("Databinding"),
         child.text <-- personVar.signal.map(p => s"${p.render}"),
         h1("Response"),
-        child <-- userBus.events.map(renderUser)
+        child <-- userBus.events.map(renderUser),
+        h1("Errors"),
+        child <-- errorBus.events.map(e => div(s"Error: ${e.getMessage}"))
       )
     )
 
