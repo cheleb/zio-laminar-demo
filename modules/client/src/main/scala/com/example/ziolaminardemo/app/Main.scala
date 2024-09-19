@@ -3,12 +3,13 @@ package com.example.ziolaminardemo.app
 import com.raquo.laminar.api.L.*
 import org.scalajs.dom
 import frontroute.LinkHandler
+import dev.cheleb.ziolaminartapir.SameOriginBackendClientLive
 
 @main def main: Unit =
 
   val myApp =
     div(
-      onMountCallback(_ => session.loadUserState()),
+      onMountCallback(_ => session.loadUserState(SameOriginBackendClientLive.backendBaseURL)),
       Header(),
       Router(),
       Footer()

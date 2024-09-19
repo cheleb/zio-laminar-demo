@@ -13,6 +13,7 @@ import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 import com.example.ziolaminardemo.service.JWTService
 import com.example.ziolaminardemo.domain.errors.NotHostHeaderException
+import sttp.model.Uri
 
 class PersonController private (personService: PersonService, jwtService: JWTService)
     extends BaseController
@@ -23,9 +24,10 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
 
   val login: ServerEndpoint[Any, Task] = PersonEndpoint.login.zServerLogic { (host, lp) =>
     for {
-      user  <- personService.login(lp.login, lp.password)
-      host  <- ZIO.fromOption(host).orElseFail(NotHostHeaderException)
-      token <- jwtService.createToken(host, user)
+      user   <- personService.login(lp.login, lp.password)
+      host   <- ZIO.fromOption(host).orElseFail(NotHostHeaderException)
+      issuer <- ZIO.fromEither(Uri.parse(host)).orElseFail(NotHostHeaderException)
+      token  <- jwtService.createToken(issuer, user)
     } yield token
   }
 

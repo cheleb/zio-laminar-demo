@@ -13,9 +13,10 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.example.ziolaminardemo.config.Configs
 import com.example.ziolaminardemo.config.JWTConfig
 import com.example.ziolaminardemo.domain.*
+import sttp.model.Uri
 
 trait JWTService {
-  def createToken(issuer: String, user: User): Task[UserToken]
+  def createToken(issuer: Uri, user: User): Task[UserToken]
   def verifyToken(token: String): Task[UserID]
 }
 
@@ -34,7 +35,7 @@ class JWTServiceLive private (jwtConfig: JWTConfig, clock: JavaClock) extends JW
     .asInstanceOf[BaseVerification]
     .build(clock)
 
-  override def createToken(issuer: String, user: User): Task[UserToken] =
+  override def createToken(issuer: Uri, user: User): Task[UserToken] =
     for {
       now      <- ZIO.attempt(clock.instant())
       userId   <- ZIO.fromOption(user.id).orElseFail(new RuntimeException("User ID is missing"))

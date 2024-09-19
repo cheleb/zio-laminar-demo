@@ -85,5 +85,5 @@ object Header:
   def loginHandler(session: Session[UserToken]): Unit =
     PersonEndpoint
       .login(None, credentials.now().http)
-      .map(token => session.setUserState(token))
+      .map(token => session.setUserState(token.issuer, token))
       .runJs
