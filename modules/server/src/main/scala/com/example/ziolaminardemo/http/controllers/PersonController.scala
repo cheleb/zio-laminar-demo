@@ -22,16 +22,14 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
   val create: ServerEndpoint[Any, Task] = PersonEndpoint.createEndpoint
     .zServerLogic(p => personService.register(p))
 
-  val login: ServerEndpoint[Any, Task] = PersonEndpoint.login.zServerLogic { (host, lp) =>
+  val login: ServerEndpoint[Any, Task] = PersonEndpoint.login.zServerLogic { lp =>
     for {
-      user   <- personService.login(lp.login, lp.password)
-      host   <- ZIO.fromOption(host).orElseFail(NotHostHeaderException)
-      issuer <- ZIO.fromEither(Uri.parse(host)).orElseFail(NotHostHeaderException)
-      token  <- jwtService.createToken(issuer, user)
+      user  <- personService.login(lp.login, lp.password)
+      token <- jwtService.createToken(user)
     } yield token
   }
 
-  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => details =>
+  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => _ =>
     ZIO.logWarning(s"Getting profile for $userId") *>
       personService.getProfile(userId)
   }

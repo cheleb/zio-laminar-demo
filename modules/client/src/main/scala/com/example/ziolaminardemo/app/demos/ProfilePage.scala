@@ -12,21 +12,24 @@ object ProfilePage {
 
   val userBus = new EventBus[User]
 
-  def apply() = if (session.isActive)
+  def apply() =
     div(
-      onMountCallback { _ =>
-        PersonEndpoint.profile(()).emitTo(userBus)
-      },
-      h1("Profile Page"),
-      child <-- userBus.events.map { user =>
+      child <-- session(div(h1("Please log in to view your profile")))(_ =>
         div(
-          h2("User"),
-          div("Name: ", user.name),
-          div("Email: ", user.email),
-          div("Age: ", user.age.toString)
+          onMountCallback { _ =>
+            PersonEndpoint.profile(()).emitTo(userBus)
+          },
+          h1("Profile Page"),
+          child <-- userBus.events.map { user =>
+            div(
+              h2("User"),
+              div("Name: ", user.name),
+              div("Email: ", user.email),
+              div("Age: ", user.age.toString)
+            )
+          }
         )
-      }
+      )
     )
-  else div(h1("Please log in to view your profile"))
 
 }
