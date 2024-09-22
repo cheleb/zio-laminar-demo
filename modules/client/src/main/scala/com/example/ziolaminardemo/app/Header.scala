@@ -71,7 +71,7 @@ object Header:
                 }
               ),
             _.item(_.icon := IconName.`sys-help`, "Help"),
-            _.item(_.icon := IconName.log, "Sign out", _.description := s" Logged in as ${userToken.email}").amend(
+            _.item(_.icon := IconName.log, "Sign out").amend(
               onClick --> { _ =>
                 session.clearUserState()
                 openPopoverBus.emit(false)

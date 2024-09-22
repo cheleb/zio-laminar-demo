@@ -13,6 +13,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import com.example.ziolaminardemo.config.Configs
 import com.example.ziolaminardemo.config.JWTConfig
 import com.example.ziolaminardemo.domain.*
+
 import sttp.model.Uri
 
 trait JWTService {

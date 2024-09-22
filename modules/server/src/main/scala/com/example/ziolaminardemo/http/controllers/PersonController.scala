@@ -4,6 +4,7 @@ import dev.cheleb.ziojwt.SecuredBaseController
 
 import zio.*
 
+import sttp.model.Uri
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.ztapir.*
 
@@ -13,7 +14,6 @@ import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 import com.example.ziolaminardemo.service.JWTService
 import com.example.ziolaminardemo.domain.errors.NotHostHeaderException
-import sttp.model.Uri
 
 class PersonController private (personService: PersonService, jwtService: JWTService)
     extends BaseController
@@ -30,7 +30,6 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
   }
 
   val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => _ =>
-    ZIO.logWarning(s"Getting profile for $userId") *>
       personService.getProfile(userId)
   }
 
