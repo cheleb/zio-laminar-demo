@@ -1,4 +1,4 @@
-package com.example.ziolaminardemo.app.demos
+package com.example.ziolaminardemo.app.profile
 
 import com.raquo.laminar.api.L.*
 

@@ -6,7 +6,6 @@ import frontroute.*
 import org.scalajs.dom
 
 import com.example.ziolaminardemo.app.demos.*
-import com.example.ziolaminardemo.app.signup.SignupPage
 
 object Router:
   private val externalUrlBus = EventBus[String]()
@@ -25,10 +24,10 @@ object Router:
             scalablytyped.ScalablytypedDemoPage()
           },
           path("signup") {
-            SignupPage()
+            signup.SignupPage()
           },
           path("profile") {
-            ProfilePage()
+            profile.ProfilePage()
           },
           noneMatched {
             div("404 Not Found")
