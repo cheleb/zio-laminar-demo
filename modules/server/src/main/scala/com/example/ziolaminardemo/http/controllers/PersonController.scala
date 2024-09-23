@@ -30,7 +30,7 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
   }
 
   val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => _ =>
-      personService.getProfile(userId)
+    personService.getProfile(userId)
   }
 
   val routes: List[ServerEndpoint[Any, Task]] =
