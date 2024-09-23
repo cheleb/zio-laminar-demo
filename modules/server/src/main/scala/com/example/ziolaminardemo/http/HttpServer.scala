@@ -15,6 +15,7 @@ import com.example.ziolaminardemo.services.FlywayService
 import com.example.ziolaminardemo.services.FlywayServiceLive
 import com.example.ziolaminardemo.repositories.UserRepositoryLive
 import com.example.ziolaminardemo.repositories.Repository
+import com.example.ziolaminardemo.repositories.PetRepositoryLive
 
 object HttpServer extends ZIOAppDefault {
 
@@ -70,6 +71,7 @@ object HttpServer extends ZIOAppDefault {
         JWTServiceLive.configuredLayer,
         // Repository layers
         UserRepositoryLive.layer,
+        PetRepositoryLive.layer,
         Repository.dataLayer
       )
 }

@@ -1,0 +1,44 @@
+package $package$.repositories
+
+import zio.*
+
+import $package$.domain.$Entity$
+import io.getquill.*
+import io.getquill.jdbczio.Quill
+import io.getquill.jdbczio.Quill.Postgres
+
+trait $Entity$Repository {
+  def create($entity$: $Entity$): Task[$Entity$]
+  def getById(id: Long): Task[Option[$Entity$]]
+  def update(id: Long, op: $Entity$ => $Entity$): Task[$Entity$]
+  def delete(id: Long): Task[$Entity$]
+}
+
+class $Entity$RepositoryLive private (quill: Quill.Postgres[SnakeCase]) extends $Entity$Repository {
+
+  import quill.*
+
+  inline given SchemaMeta[$Entity$] = schemaMeta[$Entity$]("$entity$")
+  inline given InsertMeta[$Entity$] = insertMeta[$Entity$](_.id)
+  inline given UpdateMeta[$Entity$] = updateMeta[$Entity$](_.id, _.creationDate)
+
+  override def create($entity$: $Entity$): Task[$Entity$] =
+    run(query[$Entity$].insertValue(lift(user)).returning(r => r))
+  override def getById(id: Long): Task[Option[$Entity$]] =
+    run(query[$Entity$].filter(_.id == lift(Option(id)))).map(_.headOption)
+
+  override def update(id: Long, op: $Entity$ => $Entity$): Task[$Entity$] =
+    for {
+      $entity$ <- getById(id).someOrFail(new RuntimeException(s"$Entity$ \$id not found"))
+      updated <- run(
+                   query[$Entity$].filter(_.id == lift($entity$.id)).updateValue(lift(op($entity$))).returning(r => r)
+                 )
+    } yield updated
+
+  override def delete(id: Long): Task[$Entity$] =
+    run(query[$Entity$].filter(_.id == lift(Option(id))).delete.returning(r => r))
+}
+
+object $Entity$RepositoryLive {
+  def layer: RLayer[Postgres[SnakeCase], $Entity$Repository] = ZLayer.derive[$Entity$RepositoryLive]
+}
