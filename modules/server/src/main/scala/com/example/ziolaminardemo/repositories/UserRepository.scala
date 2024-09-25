@@ -2,21 +2,17 @@ package com.example.ziolaminardemo.repositories
 
 import zio.*
 
+import com.example.ziolaminardemo.UserEntity
+import com.example.ziolaminardemo.NewUserEntity
+import com.example.ziolaminardemo.domain.PetType
+
 import io.getquill.*
 import io.getquill.jdbczio.*
 import io.getquill.jdbczio.Quill.Postgres
-import com.example.ziolaminardemo.UserEntity
-import com.example.ziolaminardemo.NewUserEntity
 import io.scalaland.chimney.dsl.*
 
-import io.getquill.context.jdbc.Encoders
-import io.getquill.context.jdbc.Decoders
-import scala.meta.internal.javacp.BaseType.D
-import io.getquill.context.mirror.Row.Data
 import io.getquill.jdbczio.Quill.DataSource
-import java.sql.Types
 import io.getquill.context.jdbc.PostgresJdbcTypes
-import com.example.ziolaminardemo.domain.PetType
 
 trait UserRepository {
   def create(user: NewUserEntity): Task[UserEntity]

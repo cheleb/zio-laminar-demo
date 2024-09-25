@@ -14,16 +14,18 @@ import com.example.ziolaminardemo.login.LoginPassword
 import com.example.ziolaminardemo.repositories.UserRepository
 import com.example.ziolaminardemo.UserEntity
 import com.example.ziolaminardemo.NewUserEntity
-import java.sql.SQLException
-import io.getquill.jdbczio.Quill
-import io.getquill.SnakeCase
 import com.example.ziolaminardemo.repositories.TransactionSupport
-import io.getquill.jdbczio.Quill.Postgres
 import com.example.ziolaminardemo.repositories.PetRepository
 import com.example.ziolaminardemo.PetEntity
-
 import com.example.ziolaminardemo.CatEntity
 import com.example.ziolaminardemo.DogEntity
+
+import java.sql.SQLException
+
+import io.getquill.jdbczio.Quill
+import io.getquill.SnakeCase
+import io.getquill.jdbczio.Quill.Postgres
+
 import io.scalaland.chimney.Transformer
 trait PersonService {
   def register(person: Person): Task[User]
