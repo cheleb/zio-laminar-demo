@@ -11,22 +11,12 @@ function npmInstall() {
         echo "First time setup: Installing npm dependencies..."
         npm i
     else
-        npmRefresh=3600
         filename=package.json
         age=$(($(date +%s) - $(stat -t %s -f %m -- "$filename")))
         age_lock=$(($(date +%s) - $(stat -t %s -f %m -- "$filename_lock")))
-        if [ $age_lock -gt $npmRefresh ] || [ $age_lock -gt $age ]; then
+        if [ $age_lock -gt $age ]; then
             echo "Reinstalling npm dependencies..."
-            if [ $age_lock -gt $age ]; then
-                echo "(New dependencies)"
-                npm i
-            else
-                echo "Not refreshing dependencies: package-lock.json but is older than $npmRefresh seconds ($age_lock)."
-                npm ci
-            fi
-
-        else
-            echo "Skipping npm install... $filename_lock is less than an $npmRefresh seconds old ($age)."
+            npm i
         fi
     fi
 }
