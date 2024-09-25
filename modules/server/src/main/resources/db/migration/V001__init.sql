@@ -2,9 +2,13 @@
 -- An enum type for the pet type for demonstration purposes.
 -- Enumeration values are case sensitive.
 --
-CREATE TYPE Pet AS ENUM('Cat', 'Dog');
+CREATE TYPE Pet AS ENUM(
+    'Cat',
+    'Dog'
+);
+
 -- Needed to create a cast to be able to use the Pet type in the users table.
-CREATE CAST (VARCHAR AS Pet) WITH INOUT AS ASSIGNMENT;
+CREATE CAST (varchar AS Pet) WITH INOUT AS ASSIGNMENT;
 
 CREATE TABLE IF NOT EXISTS "users"(
     id bigserial PRIMARY KEY,

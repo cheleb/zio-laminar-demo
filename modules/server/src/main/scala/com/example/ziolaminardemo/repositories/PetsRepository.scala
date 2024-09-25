@@ -5,10 +5,11 @@ import zio.*
 import com.example.ziolaminardemo.PetEntity
 import com.example.ziolaminardemo.CatEntity
 import com.example.ziolaminardemo.DogEntity
+import com.example.ziolaminardemo.domain.PetType
+
 import io.getquill.*
 import io.getquill.jdbczio.Quill
 import io.getquill.jdbczio.Quill.Postgres
-import com.example.ziolaminardemo.domain.PetType
 
 trait PetRepository {
   def create(pet: PetEntity): Task[PetEntity]
