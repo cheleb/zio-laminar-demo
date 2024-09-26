@@ -7,7 +7,7 @@ import com.raquo.laminar.api.L.*
 import dev.cheleb.scalamigen.{*, given}
 import dev.cheleb.ziolaminartapir.*
 
-import com.example.ziolaminardemo.app.login.LoginPasswordUI
+import com.example.ziolaminardemo.login.LoginPassword
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.domain.UserToken
 import dev.cheleb.ziolaminartapir.Session
@@ -17,7 +17,10 @@ object Header:
   private val openPopoverBus = new EventBus[Boolean]
   private val profileId      = "profileId"
 
-  val credentials = Var(LoginPasswordUI("", Password("")))
+  private val loginErrorEventBus   = new EventBus[Throwable]
+  private val loginSuccessEventBus = new EventBus[Unit]
+
+  val credentials = Var(LoginPassword("", Password("")))
 
   given Form[Password] = secretForm(Password(_))
 
@@ -35,19 +38,25 @@ object Header:
       ),
       Popover(
         _.openerId := profileId,
-        _.open <-- openPopoverBus.events,
+        _.open <-- openPopoverBus.events.mergeWith(loginSuccessEventBus.events.map(_ => false)),
         // _.placement := PopoverPlacementType.Bottom,
         div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in / up")),
         child <-- session(
           div(
             credentials.asForm,
+            child <-- loginErrorEventBus.events.map { error =>
+              div(
+                cls := "center",
+                Text(s"Error: ${error.getMessage}")
+              )
+            },
             div(
               cls := "center",
               Button(
                 "Login",
+                disabled <-- credentials.signal.map(_.isIncomplete),
                 onClick --> { _ =>
                   loginHandler(session)
-                  openPopoverBus.emit(false)
                 }
               )
             ),
@@ -84,6 +93,6 @@ object Header:
 
   def loginHandler(session: Session[UserToken]): Unit =
     PersonEndpoint
-      .login(credentials.now().http)
+      .login(credentials.now())
       .map(token => session.saveToken(SameOriginBackendClientLive.backendBaseURL, token))
-      .runJs
+      .emitTo(loginSuccessEventBus, loginErrorEventBus)
