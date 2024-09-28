@@ -4,7 +4,7 @@ import be.doeraene.webcomponents.ui5.*
 import be.doeraene.webcomponents.ui5.configkeys.*
 import com.raquo.laminar.api.L.*
 
-import dev.cheleb.scalamigen.{*, given}
+import dev.cheleb.scalamigen.*
 import dev.cheleb.ziolaminartapir.*
 
 import com.example.ziolaminardemo.login.LoginPassword
@@ -41,53 +41,55 @@ object Header:
         _.open <-- openPopoverBus.events.mergeWith(loginSuccessEventBus.events.map(_ => false)),
         // _.placement := PopoverPlacementType.Bottom,
         div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in / up")),
-        child <-- session(
-          div(
-            credentials.asForm,
-            child <-- loginErrorEventBus.events.map { error =>
-              div(
-                cls := "center",
-                Text(s"Error: ${error.getMessage}")
-              )
-            },
-            div(
-              cls := "center",
-              Button(
-                "Login",
-                disabled <-- credentials.signal.map(_.isIncomplete),
-                onClick --> { _ =>
-                  loginHandler(session)
-                }
-              )
-            ),
-            a("Sign up", href := "/signup")
-              .amend(
-                onClick --> { _ =>
-                  openPopoverBus.emit(false)
-                }
-              )
-          )
-        )(userToken =>
-          UList(
-            _.separators := ListSeparator.None,
-            _.item(
-              _.icon             := IconName.settings,
-              a("Settings", href := "/profile", title := s" Logged in as ${userToken.email}")
-            )
-              .amend(
-                onClick --> { _ =>
-                  openPopoverBus.emit(false)
-                }
-              ),
-            _.item(_.icon := IconName.`sys-help`, "Help"),
-            _.item(_.icon := IconName.log, "Sign out").amend(
-              onClick --> { _ =>
-                session.clearUserState()
-                openPopoverBus.emit(false)
-              }
-            )
-          )
+        child <-- session(notLogged)(logged)
+      )
+    )
+
+  def notLogged =
+    div(
+      credentials.asForm,
+      child <-- loginErrorEventBus.events.map { error =>
+        div(
+          cls := "center",
+          Text(s"Error: ${error.getMessage}")
         )
+      },
+      div(
+        cls := "center",
+        Button(
+          "Login",
+          disabled <-- credentials.signal.map(_.isIncomplete),
+          onClick --> { _ =>
+            loginHandler(session)
+          }
+        )
+      ),
+      a("Sign up", href := "/signup")
+        .amend(
+          onClick --> { _ =>
+            openPopoverBus.emit(false)
+          }
+        )
+    )
+
+  def logged(userToken: UserToken) =
+    UList(
+      _.separators := ListSeparator.None,
+      _.item(
+        _.icon             := IconName.settings,
+        a("Settings", href := "/profile", title := s" Logged in as ${userToken.email}")
+      )
+        .amend(
+          onClick --> { _ =>
+            openPopoverBus.emit(false)
+          }
+        ),
+      _.item(_.icon := IconName.`sys-help`, "Help"),
+      _.item(_.icon := IconName.log, "Sign out").amend(
+        onClick --> { _ =>
+          session.clearUserState()
+          openPopoverBus.emit(false)
+        }
       )
     )
 

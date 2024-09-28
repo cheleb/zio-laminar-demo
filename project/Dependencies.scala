@@ -8,7 +8,7 @@ object Dependencies {
     val flywaydb              = "10.14.0"
     val iron                  = "2.6.0"
     val javaMail              = "1.6.2"
-    val laminarFormDerivation = "local"
+    val laminarFormDerivation = "0.14.0"
     val osLib                 = "0.10.2"
     val postgresql            = "42.7.3"
     val quill                 = "4.8.5"
