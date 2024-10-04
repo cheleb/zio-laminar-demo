@@ -1,0 +1,7 @@
+package $package$
+
+import java.util.UUID
+import zio.json.JsonCodec
+
+
+case class $Entity;format="Camel"$(id: UUID, name: String) derives JsonCodec

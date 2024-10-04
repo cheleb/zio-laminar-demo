@@ -11,10 +11,8 @@ import sttp.tapir.server.interceptor.cors.CORSInterceptor
 
 import com.example.ziolaminardemo.service.*
 import com.example.ziolaminardemo.http.prometheus.*
-import com.example.ziolaminardemo.services.FlywayService
-import com.example.ziolaminardemo.services.FlywayServiceLive
-import com.example.ziolaminardemo.repositories.UserRepositoryLive
-import com.example.ziolaminardemo.repositories.Repository
+import com.example.ziolaminardemo.services.*
+import com.example.ziolaminardemo.repositories.*
 
 object HttpServer extends ZIOAppDefault {
 
@@ -70,6 +68,7 @@ object HttpServer extends ZIOAppDefault {
         JWTServiceLive.configuredLayer,
         // Repository layers
         UserRepositoryLive.layer,
+        PetRepositoryLive.layer,
         Repository.dataLayer
       )
 }

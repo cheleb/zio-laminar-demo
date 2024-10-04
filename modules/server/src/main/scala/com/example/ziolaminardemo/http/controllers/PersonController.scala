@@ -8,8 +8,7 @@ import sttp.model.Uri
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.ztapir.*
 
-import com.example.ziolaminardemo.domain.UserToken
-import com.example.ziolaminardemo.domain.UserID
+import com.example.ziolaminardemo.domain.*
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 import com.example.ziolaminardemo.service.JWTService
@@ -29,8 +28,8 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     } yield token
   }
 
-  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => _ =>
-    personService.getProfile(userId)
+  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => withPet =>
+    personService.getProfile(userId, withPet)
   }
 
   val routes: List[ServerEndpoint[Any, Task]] =
