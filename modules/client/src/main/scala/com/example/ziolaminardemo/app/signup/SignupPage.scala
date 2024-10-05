@@ -35,7 +35,7 @@ object SignupPage:
         styleAttr := "width: 600px; float: left;",
         personVar.asForm,
         child.maybe <-- personVar.signal.map {
-          case Person(_, _, password, passwordConfirmation, _, _) if password != passwordConfirmation =>
+          case Person(_, _, password, passwordConfirmation, _, _, _) if password != passwordConfirmation =>
             Some(div("Passwords do not match"))
           case _ => None
         }
@@ -49,6 +49,17 @@ object SignupPage:
           onChange.mapToChecked --> { checked =>
             debugVar.set(checked)
           }
+        ),
+        div(
+          styleAttr := "float: both;",
+          child <-- debugVar.signal.map:
+            case true =>
+              div(
+                styleAttr := "max-width: 300px; margin:1em auto",
+                Title("Databinding"),
+                child.text <-- personVar.signal.map(p => s"${p.render}")
+              )
+            case false => div()
         )
       ),
       div(
@@ -67,30 +78,19 @@ object SignupPage:
           }
         )
       ),
-      div(
-        child <-- debugVar.signal.map:
-          case true =>
-            div(
-              styleAttr := "max-width: 600px; margin:1em auto",
-              Title("Databinding"),
-              child.text <-- personVar.signal.map(p => s"${p.render}")
-            )
-          case false => div()
-        ,
-        Toast(
-          cls := "srf-invalid",
-          _.duration  := 2.seconds,
-          _.placement := ToastPlacement.MiddleCenter,
-          child <-- userBus.events.map(renderUser),
-          _.open <-- userBus.events.map(_ => true)
-        ),
-        Toast(
-          cls := "srf-invalid",
-          _.duration  := 2.seconds,
-          _.placement := ToastPlacement.MiddleCenter,
-          child <-- errorBus.events.map(_.getMessage()),
-          _.open <-- errorBus.events.map(_ => true)
-        )
+      Toast(
+        cls := "srf-valid",
+        _.duration  := 2.seconds,
+        _.placement := ToastPlacement.MiddleCenter,
+        child <-- userBus.events.map(renderUser),
+        _.open <-- userBus.events.map(_ => true)
+      ),
+      Toast(
+        cls := "srf-invalid",
+        _.duration  := 2.seconds,
+        _.placement := ToastPlacement.MiddleCenter,
+        child <-- errorBus.events.map(_.getMessage()),
+        _.open <-- errorBus.events.map(_ => true)
       )
     )
 

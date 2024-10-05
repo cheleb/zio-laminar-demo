@@ -7,14 +7,17 @@ import zio.prelude.Debug.Repr
 import zio.prelude.Debug.Renderer
 
 import zio.prelude.magnolia.*
+import dev.cheleb.scalamigen.NoPanel
 
+@NoPanel(asTable = false)
 case class Person(
   name: String,
   email: String,
   password: Password,
   passwordConfirmation: Password,
   age: Int,
-  pet: Either[Cat, Dog]
+  pet: Either[Cat, Dog],
+  op: Option[String] = None
 ) derives JsonCodec,
       Schema,
       Debug

@@ -79,15 +79,19 @@ ui5-input[type="Number"] {
   grid-row: 3/5;
 }
 
+.srf-panel {
+  border: 1px solid rgb(139, 139, 130);
+  border-radius: 10px;
+  margin: 1em;
+  color: #d9480f;
+}
+
 .srf-form:has(.srf-invalid) {
 
   border: 1px solid red;
 
 }
 
-.srf-valid {
-  border: 1px solid transparent;
-}
 
 .srf-invalid {
   border: 1px solid red;
