@@ -10,8 +10,11 @@ import dev.cheleb.ziolaminartapir.*
 import com.example.ziolaminardemo.login.LoginPassword
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.domain.UserToken
-import dev.cheleb.ziolaminartapir.Session
 import com.example.ziolaminardemo.domain.Password
+
+import dev.cheleb.ziolaminartapir.Session
+
+import scala.concurrent.duration.DurationInt
 
 object Header:
   private val openPopoverBus = new EventBus[Boolean]
@@ -40,7 +43,7 @@ object Header:
         _.openerId := profileId,
         _.open <-- openPopoverBus.events.mergeWith(loginSuccessEventBus.events.map(_ => false)),
         // _.placement := PopoverPlacementType.Bottom,
-        div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in / up")),
+        div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in")),
         child <-- session(notLogged)(logged)
       )
     )
@@ -48,12 +51,13 @@ object Header:
   def notLogged =
     div(
       credentials.asForm,
-      child <-- loginErrorEventBus.events.map { error =>
-        div(
-          cls := "center",
-          Text(s"Error: ${error.getMessage}")
-        )
-      },
+      Toast(
+        cls := "srf-invalid",
+        _.duration  := 2.seconds,
+        _.placement := ToastPlacement.MiddleCenter,
+        child <-- loginErrorEventBus.events.map(_.getMessage()),
+        _.open <-- loginErrorEventBus.events.map(_ => true)
+      ),
       div(
         cls := "center",
         Button(
