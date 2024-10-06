@@ -3,20 +3,18 @@ package com.example.ziolaminardemo.app.signup
 import zio.prelude.*
 
 import be.doeraene.webcomponents.ui5.*
+import be.doeraene.webcomponents.ui5.configkeys.ToastPlacement
 
 import com.raquo.laminar.api.L.*
 
 import dev.cheleb.scalamigen.*
-
 import dev.cheleb.ziolaminartapir.*
-
-import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
-import be.doeraene.webcomponents.ui5.configkeys.ToastPlacement
 
 import scala.concurrent.duration.DurationInt
 
 import com.example.ziolaminardemo.app.given
 import com.example.ziolaminardemo.domain.*
+import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 
 object SignupPage:
   def apply() =
@@ -34,10 +32,8 @@ object SignupPage:
       div(
         styleAttr := "width: 600px; float: left;",
         personVar.asForm,
-        child.maybe <-- personVar.signal.map {
-          case Person(_, _, password, passwordConfirmation, _, _) if password != passwordConfirmation =>
-            Some(div("Passwords do not match"))
-          case _ => None
+        children <-- personVar.signal.map {
+          _.errorMessages.map(div(_)).toSeq
         }
       ),
       div(
@@ -49,12 +45,24 @@ object SignupPage:
           onChange.mapToChecked --> { checked =>
             debugVar.set(checked)
           }
+        ),
+        div(
+          styleAttr := "float: both;",
+          child <-- debugVar.signal.map:
+            case true =>
+              div(
+                styleAttr := "max-width: 300px; margin:1em auto",
+                Title("Databinding"),
+                child.text <-- personVar.signal.map(p => s"${p.render}")
+              )
+            case false => div()
         )
       ),
       div(
         styleAttr := "clear:both;max-width: fit-content; margin:1em auto",
         Button(
           "Create",
+          disabled <-- personVar.signal.map(_.errorMessages.nonEmpty),
           onClick --> { _ =>
             // scalafmt:off
 
@@ -67,30 +75,19 @@ object SignupPage:
           }
         )
       ),
-      div(
-        child <-- debugVar.signal.map:
-          case true =>
-            div(
-              styleAttr := "max-width: 600px; margin:1em auto",
-              Title("Databinding"),
-              child.text <-- personVar.signal.map(p => s"${p.render}")
-            )
-          case false => div()
-        ,
-        Toast(
-          cls := "srf-invalid",
-          _.duration  := 2.seconds,
-          _.placement := ToastPlacement.MiddleCenter,
-          child <-- userBus.events.map(renderUser),
-          _.open <-- userBus.events.map(_ => true)
-        ),
-        Toast(
-          cls := "srf-invalid",
-          _.duration  := 2.seconds,
-          _.placement := ToastPlacement.MiddleCenter,
-          child <-- errorBus.events.map(_.getMessage()),
-          _.open <-- errorBus.events.map(_ => true)
-        )
+      Toast(
+        cls := "srf-valid",
+        _.duration  := 2.seconds,
+        _.placement := ToastPlacement.MiddleCenter,
+        child <-- userBus.events.map(renderUser),
+        _.open <-- userBus.events.map(_ => true)
+      ),
+      Toast(
+        cls := "srf-invalid",
+        _.duration  := 2.seconds,
+        _.placement := ToastPlacement.MiddleCenter,
+        child <-- errorBus.events.map(_.getMessage()),
+        _.open <-- errorBus.events.map(_ => true)
       )
     )
 

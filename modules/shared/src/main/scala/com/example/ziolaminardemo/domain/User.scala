@@ -10,6 +10,7 @@ case class User(
   email: String,
   petId: Option[Long],
   petType: Option[PetType],
+  hashedPassword: String,
   age: Int,
   creationDate: ZonedDateTime
 ) derives JsonCodec,

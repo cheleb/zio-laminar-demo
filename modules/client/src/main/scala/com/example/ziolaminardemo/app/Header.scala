@@ -12,8 +12,6 @@ import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.domain.UserToken
 import com.example.ziolaminardemo.domain.Password
 
-import dev.cheleb.ziolaminartapir.Session
-
 import scala.concurrent.duration.DurationInt
 
 object Header:
@@ -43,13 +41,16 @@ object Header:
         _.openerId := profileId,
         _.open <-- openPopoverBus.events.mergeWith(loginSuccessEventBus.events.map(_ => false)),
         // _.placement := PopoverPlacementType.Bottom,
-        div(Title(padding := "0.25rem 1rem 0rem 1rem", "Sign in")),
-        child <-- session(notLogged)(logged)
+        div(
+          Title("Sign in"),
+          child <-- session(notLogged)(logged)
+        )
       )
     )
 
   def notLogged =
     div(
+      styleAttr := "padding: 1em;",
       credentials.asForm,
       Toast(
         cls := "srf-invalid",
