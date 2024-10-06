@@ -12,8 +12,6 @@ import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.domain.UserToken
 import com.example.ziolaminardemo.domain.Password
 
-import dev.cheleb.ziolaminartapir.Session
-
 import scala.concurrent.duration.DurationInt
 
 object Header:
