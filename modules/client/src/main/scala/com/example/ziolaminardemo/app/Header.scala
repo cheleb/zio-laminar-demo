@@ -52,7 +52,7 @@ object Header:
 
   def notLogged =
     div(
-      styleAttr := "padding: 1em; background-color: #f0f0f0;",
+      styleAttr := "padding: 1em;",
       credentials.asForm,
       Toast(
         cls := "srf-invalid",

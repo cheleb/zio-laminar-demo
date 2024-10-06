@@ -34,10 +34,8 @@ object SignupPage:
       div(
         styleAttr := "width: 600px; float: left;",
         personVar.asForm,
-        child.maybe <-- personVar.signal.map {
-          case Person(_, _, password, passwordConfirmation, _, _, _) if password != passwordConfirmation =>
-            Some(div("Passwords do not match"))
-          case _ => None
+        children <-- personVar.signal.map {
+          _.errorMessages.map(div(_)).toSeq
         }
       ),
       div(
@@ -66,6 +64,7 @@ object SignupPage:
         styleAttr := "clear:both;max-width: fit-content; margin:1em auto",
         Button(
           "Create",
+          disabled <-- personVar.signal.map(_.errorMessages.nonEmpty),
           onClick --> { _ =>
             // scalafmt:off
 
