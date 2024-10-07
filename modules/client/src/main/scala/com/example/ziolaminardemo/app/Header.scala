@@ -35,12 +35,12 @@ object Header:
         _.showNotifications  := true,
         _.showCoPilot        := true,
         _.slots.profile      := Avatar(idAttr := profileId, img(src := "img/questionmark.jpg")),
-        _.events.onProfileClick.mapTo(true) --> openPopoverBus.writer
+        _.events.onProfileClick.mapTo(true) --> openPopoverBus
       ),
       Popover(
         _.openerId := profileId,
-        _.open <-- openPopoverBus.events.mergeWith(loginSuccessEventBus.events.map(_ => false)),
-        // _.placement := PopoverPlacementType.Bottom,
+        _.open <-- openPopoverBus.events
+          .mergeWith(loginSuccessEventBus.events.mapTo(false)),
         div(
           Title("Sign in"),
           child <-- session(notLogged)(logged)
@@ -57,23 +57,19 @@ object Header:
         _.duration  := 2.seconds,
         _.placement := ToastPlacement.MiddleCenter,
         child <-- loginErrorEventBus.events.map(_.getMessage()),
-        _.open <-- loginErrorEventBus.events.map(_ => true)
+        _.open <-- loginErrorEventBus.events.mapTo(true)
       ),
       div(
         cls := "center",
         Button(
           "Login",
           disabled <-- credentials.signal.map(_.isIncomplete),
-          onClick --> { _ =>
-            loginHandler(session)
-          }
+          onClick --> loginHandler(session)
         )
       ),
       a("Sign up", href := "/signup")
         .amend(
-          onClick --> { _ =>
-            openPopoverBus.emit(false)
-          }
+          onClick.mapTo(false) --> openPopoverBus
         )
     )
 
@@ -98,8 +94,9 @@ object Header:
       )
     )
 
-  def loginHandler(session: Session[UserToken]): Unit =
+  def loginHandler(session: Session[UserToken]): Observer[Any] = Observer[Any] { _ =>
     PersonEndpoint
       .login(credentials.now())
       .map(token => session.saveToken(SameOriginBackendClientLive.backendBaseURL, token))
       .emitTo(loginSuccessEventBus, loginErrorEventBus)
+  }
