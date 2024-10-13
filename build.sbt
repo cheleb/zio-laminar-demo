@@ -103,19 +103,12 @@ lazy val client = scalajsProject("client")
           config
             .withModuleKind(scalaJSModule)
             .withSourceMap(false)
-            .withModuleSplitStyle(ModuleSplitStyle.SmallestModules)
+            .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("com.example.ziolaminardemo")))
       }
     }
   )
   .settings(scalacOptions ++= usedScalacOptions)
-  .settings(
-    libraryDependencies ++= Seq(
-      // pull laminar 17.1.0
-      "dev.cheleb"    %%% "laminar-form-derivation-ui5" % Versions.laminarFormDerivation,
-      "dev.cheleb"    %%% "zio-laminar-tapir"           % Versions.zioLaminarTapir,
-      "io.frontroute" %%% "frontroute"                  % "0.19.0"
-    )
-  )
+  .settings(clientLibraryDependencies)
   .settings(
     scalaJsSettings
   )
@@ -143,8 +136,8 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .settings(
     publish / skip := true
   )
-lazy val sharedJvm = shared.jvm
-lazy val sharedJs  = shared.js
+lazy val sharedJvm: Project = shared.jvm
+lazy val sharedJs: Project  = shared.js
 
 Test / fork := false
 
