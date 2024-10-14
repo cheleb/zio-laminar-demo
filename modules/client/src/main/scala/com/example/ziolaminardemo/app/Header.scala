@@ -31,7 +31,7 @@ object Header:
         _.slots.startButton  := a(Icon(_.name := IconName.home, cls := "pad-10"), href := "/"),
         _.primaryTitle       := "ZIO Laminar Demo",
         _.secondaryTitle     := "And Tapir, UI5, and more",
-        _.notificationsCount := "2",
+        _.notificationsCount := "2+",
         _.showNotifications  := true,
         _.showCoPilot        := true,
         _.slots.profile      := Avatar(idAttr := profileId, img(src := "img/questionmark.jpg")),
@@ -81,9 +81,7 @@ object Header:
         a("Settings", href := "/profile", title := s" Logged in as ${userToken.email}")
       )
         .amend(
-          onClick --> { _ =>
-            openPopoverBus.emit(false)
-          }
+          onClick.mapTo(false) --> openPopoverBus
         ),
       _.item(_.icon := IconName.`sys-help`, "Help"),
       _.item(_.icon := IconName.log, "Sign out").amend(

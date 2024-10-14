@@ -60,6 +60,7 @@ object SignupPage:
       renderToast(userBus, errorBus)
     )
 
+
   def renderUser(user: User) =
     div(
       h2("User"),
@@ -68,6 +69,7 @@ object SignupPage:
       div(s"Age: ${user.age}"),
       div(s"Creation Date: ${user.creationDate}")
     )
+
   def debugUI(debugVar: Var[Boolean], personVar: Var[Person]) =
     div(
       styleAttr := "float: right;",
@@ -89,6 +91,7 @@ object SignupPage:
           case false => div()
       )
     )
+
   def renderToast(userBus: EventBus[User], errorBus: EventBus[Throwable]) =
     Seq(
       Toast(

@@ -136,8 +136,8 @@ lazy val shared = crossProject(JSPlatform, JVMPlatform)
   .settings(
     publish / skip := true
   )
-lazy val sharedJvm: Project = shared.jvm
-lazy val sharedJs: Project  = shared.js
+lazy val sharedJvm = shared.jvm
+lazy val sharedJs  = shared.js
 
 Test / fork := false
 
