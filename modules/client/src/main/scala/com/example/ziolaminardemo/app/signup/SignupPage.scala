@@ -30,7 +30,7 @@ object SignupPage:
       styleAttr := "max-width: fit-content;  margin-left: auto;  margin-right: auto;",
       h1("Signup"),
       div(
-        styleAttr := "width: 600px; float: left;",
+        styleAttr := "float: left;",
         //
         // The form is generated from the case class
         //
@@ -59,7 +59,6 @@ object SignupPage:
       ),
       renderToast(userBus, errorBus)
     )
-
 
   def renderUser(user: User) =
     div(

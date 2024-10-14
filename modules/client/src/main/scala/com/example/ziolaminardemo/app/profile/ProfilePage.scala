@@ -13,7 +13,11 @@ object ProfilePage:
   val userBus = new EventBus[(User, Option[Pet])]
 
   def apply() = div(
-    child <-- session(div(h1("Please log in to view your profile")))(_ =>
+    child <-- session:
+      // If the user is not logged in, show a message
+      div(h1("Please log in to view your profile"))
+      // If the user is logged in, show the profile page
+    (_ =>
       div(
         onMountCallback { _ =>
           PersonEndpoint.profile(false).emitTo(userBus)
