@@ -45,9 +45,7 @@ class PersonServiceLive private (
       tx(
         for {
           _ <- ZIO.logDebug(s"Registering user: $person")
-
           newPetEntity = person.pet.fold(PetEntity.apply, PetEntity.apply)
-
           petEntity <- petRepository.create(newPetEntity)
           user <- userRepository
                     .create(
