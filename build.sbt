@@ -1,4 +1,3 @@
-import java.nio.charset.StandardCharsets
 import org.scalajs.linker.interface.ModuleSplitStyle
 
 import Dependencies._
@@ -165,6 +164,8 @@ def scalajsProject(projectId: String): Project =
 //
 Global / onLoad := {
 
+  insureBuildEnvFile(baseDirectory.value / "scripts" / "target" / "build-env.sh", (client / scalaVersion).value)
+
   // This is hack to share static files between server and client.
   // It creates symlinks from server to client static files
   // Ideally, we should use a shared folder for static files
@@ -174,16 +175,5 @@ Global / onLoad := {
   symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
   symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
 
-  val scalaVersionValue = (client / scalaVersion).value
-  val outputFile =
-    target.value / "build-env.sh"
-    IO.writeLines(
-      outputFile,
-      s"""  
-         |# Generated file see build.sbt
-         |SCALA_VERSION="$scalaVersionValue"
-         |""".stripMargin.split("\n").toList,
-      StandardCharsets.UTF_8
-    )
   (Global / onLoad).value
 }
