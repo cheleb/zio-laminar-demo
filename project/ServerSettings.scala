@@ -1,4 +1,7 @@
 import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
+import com.typesafe.sbt.packager.archetypes.scripts.AshScriptPlugin
+import com.typesafe.sbt.packager.docker.DockerPlugin
+import com.typesafe.sbt.SbtNativePackager.autoImport._
 import com.typesafe.sbt.web._
 import com.typesafe.sbt.web.Import._
 
@@ -9,14 +12,17 @@ import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import org.scalablytyped.converter.plugin._
 import org.scalablytyped.converter.plugin.STKeys._
 import org.scalajs.sbtplugin._
+
 import play.twirl.sbt.SbtTwirl
+
 import sbt._
 import sbt.Keys._
-import scalajsbundler.sbtplugin.WebScalaJSBundlerPlugin
-import webscalajs.WebScalaJS.autoImport._
+
 import scalajsbundler.sbtplugin._
+import scalajsbundler.sbtplugin.WebScalaJSBundlerPlugin
 import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
 
+import webscalajs.WebScalaJS.autoImport._
 object ServerSettings {
 //
 // Define the build mode:
@@ -39,7 +45,7 @@ object ServerSettings {
 //
   val serverPlugins = mode match {
     case "prod" =>
-      Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin)
+      Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin, DockerPlugin, AshScriptPlugin)
     case _ => Seq()
   }
 
@@ -56,7 +62,7 @@ object ServerSettings {
         Runtime / managedClasspath += (Assets / packageBin).value,
         scalaJSProjects         := clientProjects,
         Assets / pipelineStages := Seq(scalaJSPipeline)
-      )
+      ) ++ dockerSettings
     case _ => Seq()
   }
 
@@ -156,6 +162,22 @@ object ServerSettings {
       writeBuildEnvFile()
     }
 
+  }
+
+  lazy val dockerSettings = {
+    import DockerPlugin.autoImport._
+    import DockerPlugin.globalSettings._
+    import sbt.Keys._
+    Seq(
+      Docker / maintainer     := "Joh doe",
+      Docker / dockerUsername := Some("johndoe"),
+      Docker / packageName    := "zio-laminar-demo",
+      // dockerBaseImage := "azul/zulu-openjdk-alpine:23.0.1-22.30",
+      dockerBaseImage := "azul/zulu-openjdk-alpine:23-latest",
+//      dockerRepository   := Some("localhost:5000"),
+      dockerUpdateLatest := true,
+      dockerExposedPorts := Seq(8000)
+    )
   }
 
 }

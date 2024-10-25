@@ -33,6 +33,9 @@ lazy val generator = project
   .enablePlugins(SbtTwirl)
   .disablePlugins(RevolverPlugin)
   .settings(staticFilesGeneratorDependencies)
+  .settings(
+    publish / skip := true
+  )
 
 // Aggregate root project
 // This is the root project that aggregates all other projects
