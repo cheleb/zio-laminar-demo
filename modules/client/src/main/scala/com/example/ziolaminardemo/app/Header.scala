@@ -28,7 +28,10 @@ object Header:
   def apply(): HtmlElement =
     div(
       ShellBar(
-        _.slots.startButton  := a(Icon(_.name := IconName.home, cls := "pad-10"), href := "/"),
+        _.slots.startButton := a(
+          Icon(_.name := IconName.home, cls := "pad-10"),
+          href := "/public/"
+        ),
         _.primaryTitle       := "ZIO Laminar Demo",
         _.secondaryTitle     := "And Tapir, UI5, and more",
         _.notificationsCount := "2+",
@@ -67,7 +70,7 @@ object Header:
           onClick --> loginHandler(session)
         )
       ),
-      a("Sign up", href := "/signup")
+      a("Sign up", href := "/public/signup")
         .amend(
           onClick.mapTo(false) --> openPopoverBus
         )

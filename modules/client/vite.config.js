@@ -18,7 +18,7 @@ export default defineConfig({
     build: {
         sourcemap: 'inline',
     },
-    // base: "/zio-laminar-demo",
+    base: "/public/",
 
 });
 

@@ -23,10 +23,10 @@ object Router:
           path("demos" / "scalablytyped") {
             scalablytyped.ScalablytypedDemoPage()
           },
-          path("signup") {
+          path("public" / "signup") {
             signup.SignupPage()
           },
-          path("profile") {
+          path("public" / "profile") {
             profile.ProfilePage()
           },
           noneMatched {
