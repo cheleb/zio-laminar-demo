@@ -12,7 +12,7 @@ addSbtPlugin("com.github.sbt" % "sbt-ci-release"      % "1.5.12")
 addSbtPlugin("com.eed3si9n"   % "sbt-assembly"        % "2.3.0")
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.4")
 // Static file generator
-addSbtPlugin("org.playframework.twirl" % "sbt-twirl" % "2.0.5")
+addSbtPlugin("org.playframework.twirl" % "sbt-twirl" % "2.0.7")
 // Cross project support, to spread project resources between js and jvm world
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.3.2")
 addSbtPlugin("com.dwijnand"       % "sbt-dynver"               % "4.1.1")
