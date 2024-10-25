@@ -23,6 +23,7 @@ import scalajsbundler.sbtplugin.WebScalaJSBundlerPlugin
 import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
 
 import webscalajs.WebScalaJS.autoImport._
+
 object ServerSettings {
 //
 // Define the build mode:
@@ -172,7 +173,6 @@ object ServerSettings {
       Docker / maintainer     := "Joh doe",
       Docker / dockerUsername := Some("johndoe"),
       Docker / packageName    := "zio-laminar-demo",
-      // dockerBaseImage := "azul/zulu-openjdk-alpine:23.0.1-22.30",
       dockerBaseImage := "azul/zulu-openjdk-alpine:23-latest",
 //      dockerRepository   := Some("localhost:5000"),
       dockerUpdateLatest := true,

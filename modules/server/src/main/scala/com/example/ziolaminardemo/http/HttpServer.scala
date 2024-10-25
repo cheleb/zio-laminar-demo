@@ -70,6 +70,6 @@ object HttpServer extends ZIOAppDefault {
         UserRepositoryLive.layer,
         PetRepositoryLive.layer,
         Repository.dataLayer
-//        ZLayer.Debug.mermaid
+        //,ZLayer.Debug.mermaid
       )
 }
