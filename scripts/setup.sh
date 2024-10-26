@@ -2,7 +2,28 @@
 
 . ./scripts/env.sh
 
-rm -f $NPM_DEV_STARTED
+if [ ! -e $BUILD_ENV_FILE ]; then
+    echo "Waiting for $BUILD_ENV_FILE to be generated..."
+    echo '  Import the project !!!'
+    echo
+
+    until [ -e $BUILD_ENV_FILE ]; do
+      echo -n "."
+      sleep 4
+    done
+
+    echo
+    echo
+    echo " Good job 🚀"
+    echo
+
+fi
+
+
+. $BUILD_ENV_FILE
+
+rm -f $MAIN_JS_FILE
+
 
 filename_lock=node_modules/.package-lock.json
 
@@ -12,10 +33,10 @@ function npmInstall() {
         npm i
     else
         filename=package.json
-        age=$(($(date +%s) - $(stat -t %s -f %m -- "$filename")))
-        age_lock=$(($(date +%s) - $(stat -t %s -f %m -- "$filename_lock")))
-        if [ $age_lock -gt $age ]; then
-            echo "Reinstalling npm dependencies..."
+        age=$(stat -t %s -f %m -- "$filename")
+        age_lock=$(stat -t %s -f %m -- "$filename_lock")
+        if [ $age_lock -lt $age ]; then
+            echo "Updating npm dependencies..."
             npm i
         fi
     fi
@@ -25,7 +46,11 @@ cd modules/client
 
 npmInstall
 
+#
+# Generating scalablytyped
+#
 cd scalablytyped
 npmInstall
 cd ../../..
+echo "Generating Scala.js bindings..."
 sbt -mem 4096 compile

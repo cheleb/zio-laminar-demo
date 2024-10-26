@@ -136,8 +136,11 @@ object ServerSettings {
       if (Files.exists(target.toPath))
         Files.createSymbolicLink(link.toPath, link.toPath.getParent.relativize(target.toPath))
 
-  def insureBuildEnvFile(outputFile: File, scalaVersion: String) = {
+  def insureBuildEnvFile(baseDirectory: File, scalaVersion: String) = {
 
+    val outputFile = baseDirectory / "scripts" / "target" / "build-env.sh"
+
+    val mainJSFile = "modules/client/target/scala-$SCALA_VERSION/client-fastopt/main.js"
     lazy val buildFileContent = s"""
                                    |#!/bin/usr/env bash
                                    |
@@ -146,6 +149,7 @@ object ServerSettings {
                                    |# Do not edit it manually
                                    |
                                    |SCALA_VERSION="$scalaVersion"
+                                   |MAIN_JS_FILE=$mainJSFile
                                    |""".stripMargin.split("\n").toList
     def writeBuildEnvFile(): Unit =
       IO.writeLines(
@@ -162,6 +166,12 @@ object ServerSettings {
     } else {
       writeBuildEnvFile()
     }
+
+    val versionFile = baseDirectory / "version.sbt"
+    if(!versionFile.exists()) {
+      IO.write(versionFile, s"""ThisBuild / version := "0.0.1"""")
+    }
+
 
   }
 

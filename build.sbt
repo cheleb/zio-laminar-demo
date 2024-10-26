@@ -167,7 +167,7 @@ def scalajsProject(projectId: String): Project =
 //
 Global / onLoad := {
 
-  insureBuildEnvFile(baseDirectory.value / "scripts" / "target" / "build-env.sh", (client / scalaVersion).value)
+  insureBuildEnvFile(baseDirectory.value, (client / scalaVersion).value)
 
   // This is hack to share static files between server and client.
   // It creates symlinks from server to client static files
