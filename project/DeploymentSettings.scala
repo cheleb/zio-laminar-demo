@@ -21,13 +21,13 @@ import sbt.Keys._
 import scalajsbundler.sbtplugin._
 import scalajsbundler.sbtplugin.WebScalaJSBundlerPlugin
 import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
+
 import webscalajs.WebScalaJS.autoImport._
 
 object DeploymentSettings {
 //
 // Define the build mode:
-  
-// - prod: production mode
+// - prod: production mode, aka with BFF and webjar deployment
 //         optimized, CommonJSModule
 //         webjar packaging
 // - demo: demo mode (default)
@@ -49,6 +49,12 @@ object DeploymentSettings {
       Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin, DockerPlugin, AshScriptPlugin)
     case _ => Seq()
   }
+
+  def scalaJSModule = mode match {
+    case "prod" => ModuleKind.CommonJSModule
+    case _      => ModuleKind.ESModule
+  }
+
   def serverSettings(clientProjects: Project*) = mode match {
     case "prod" =>
       Seq(
@@ -60,6 +66,7 @@ object DeploymentSettings {
       ) ++ dockerSettings
     case _ => Seq()
   }
+
   def staticGenerationSettings(generator: Project) =
     if (mode == "prod")
       Seq(
@@ -82,12 +89,6 @@ object DeploymentSettings {
       )
     else
       Seq()
-  def scalaJSModule = mode match {
-    case "prod" => ModuleKind.CommonJSModule
-    case _      => ModuleKind.ESModule
-  }
-
-
 
   //
   // ScalablyTyped settings
@@ -96,6 +97,7 @@ object DeploymentSettings {
     case "prod" => ScalablyTypedConverterPlugin
     case _      => ScalablyTypedConverterExternalNpmPlugin
   }
+
   val scalablytypedSettings = mode match {
     case "prod" =>
       Seq(
@@ -123,10 +125,12 @@ object DeploymentSettings {
         )
       )
       .toSeq
+
   def scalaJSPlugin = mode match {
     case "prod" => ScalaJSBundlerPlugin
     case _      => ScalaJSPlugin
   }
+
   def symlink(link: File, target: File): Unit =
     if (!(Files.exists(link.toPath) || Files.isSymbolicLink(link.toPath)))
       if (Files.exists(target.toPath))

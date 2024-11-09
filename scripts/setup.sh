@@ -51,7 +51,6 @@ npmInstall
 #
 cd scalablytyped
 npmInstall
-cd ../..
-cd ..
+cd ../../..
 echo "Generating Scala.js bindings..."
 sbt -mem 4096 compile
