@@ -4,25 +4,28 @@ import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
   val Versions = new {
-    val chimney               = "1.5.0"
+    // Pure server
     val flywaydb              = "10.20.1"
-    val frontroute            = "0.19.0"
-    val iron                  = "2.6.0"
     val javaMail              = "1.6.2"
-    val laminarFormDerivation = "0.16.1"
     val osLib                 = "0.10.2"
     val postgresql            = "42.7.4"
     val quill                 = "4.8.5"
     val scopt                 = "4.1.0"
     val slf4j                 = "2.0.16"
     val stripe                = "25.10.0"
+    // Potentially share between client and server
+    val chimney               = "1.5.0"
+    val iron                  = "2.6.0"
     val sttp                  = "3.9.6"
-    val tapir                 = "1.11.5"
-    val zio                   = "2.1.11"
+    val tapir                 = "1.11.8"
+    val zio                   = "2.1.12"
     val zioConfig             = "4.0.2"
-    val zioLaminarTapir       = "0.3.0"
+    val zioLaminarTapir       = "0.2.1"
     val zioLogging            = "2.2.4"
     val zioPrelude            = "1.0.0-RC31"
+    // Pure client
+    val laminarFormDerivation = "0.16.1"
+    val frontroute            = "0.19.0"
   }
 
   private val configDependencies = Seq(
@@ -42,7 +45,15 @@ object Dependencies {
 
   private val jwtDependencies = Seq(
     "com.auth0" % "java-jwt" % "4.4.0"
-  )
+    )
+
+
+  val staticFilesGeneratorDependencies =
+      libraryDependencies ++= Seq(
+        "com.github.scopt" %% "scopt"        % Versions.scopt,
+        "com.lihaoyi"      %% "os-lib"       % Versions.osLib,
+        "org.slf4j"         % "slf4j-simple" % Versions.slf4j
+      )
 
   val serverLibraryDependencies =
     libraryDependencies ++= Seq(
@@ -76,7 +87,6 @@ object Dependencies {
       "dev.zio"                     %%% "zio-prelude-magnolia"           % Versions.zioPrelude,
       "io.github.iltotore"           %% "iron-zio-json"                  % Versions.iron
     )
-
   val clientLibraryDependencies: Setting[Seq[ModuleID]] =
     libraryDependencies ++= Seq(
       // pull laminar 17.1.0
@@ -86,13 +96,5 @@ object Dependencies {
       "io.frontroute" %%% "frontroute"        % Versions.frontroute
     )
 
-  val clientAndServerLibraries = Seq(
-  )
 
-  val staticFilesGeneratorDependencies =
-    libraryDependencies ++= Seq(
-      "com.github.scopt" %% "scopt"        % Versions.scopt,
-      "com.lihaoyi"      %% "os-lib"       % Versions.osLib,
-      "org.slf4j"         % "slf4j-simple" % Versions.slf4j
-    )
 }
