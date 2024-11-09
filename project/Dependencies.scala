@@ -61,7 +61,7 @@ object Dependencies {
 
   val testingLibraryDependencies =
     libraryDependencies ++= Seq(
-      "org.scalameta" %% "munit"        % "1.0.0"      % Test,
+      "org.scalameta" %% "munit"        % "1.0.2"      % Test,
       "dev.zio"       %% "zio-test"     % Versions.zio % Test,
       "dev.zio"       %% "zio-test-sbt" % Versions.zio % Test
     )
