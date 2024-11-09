@@ -13,5 +13,4 @@ done
 echo "Watching client-fastopt/main.js for changes..."
 
 sleep 3
-
 MOD=dev sbt '~client/fastLinkJS'

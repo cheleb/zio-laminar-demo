@@ -30,11 +30,11 @@ object Router:
               },
               path("profile") {
                 profile.ProfilePage()
+              },
+              path("demos" / "scalablytyped") {
+                scalablytyped.ScalablytypedDemoPage()
               }
             )
-          },
-          path("demos" / "scalablytyped") {
-            scalablytyped.ScalablytypedDemoPage()
           },
           noneMatched {
             div("404 Not Found")

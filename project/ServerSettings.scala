@@ -103,9 +103,9 @@ object ServerSettings {
       Seq(
         Compile / npmDependencies ++= Seq(
           "chart.js"        -> "2.9.4",
-          "@types/chart.js" -> "2.9.29"
+          "@types/chart.js" -> "2.9.41"
         ),
-        webpack / version      := "5.91.0",
+        webpack / version      := "5.96.1",
         scalaJSStage in Global := FullOptStage,
         webpackBundlingMode    := BundlingMode.LibraryAndApplication()
       )
@@ -168,7 +168,7 @@ object ServerSettings {
     }
 
     val versionFile = baseDirectory / "version.sbt"
-    if(!versionFile.exists()) {
+    if (!versionFile.exists()) {
       IO.write(versionFile, s"""ThisBuild / version := "0.0.1"""")
     }
 
@@ -183,10 +183,10 @@ object ServerSettings {
       Docker / maintainer     := "Joh doe",
       Docker / dockerUsername := Some("johndoe"),
       Docker / packageName    := "zio-laminar-demo",
-      dockerBaseImage := "azul/zulu-openjdk-alpine:23-latest",
-//      dockerRepository   := Some("localhost:5000"),
-      dockerUpdateLatest := true,
-      dockerExposedPorts := Seq(8000)
+      dockerBaseImage         := "azul/zulu-openjdk-alpine:23-latest",
+      dockerRepository        := Some("registry.orb.local"),
+      dockerUpdateLatest      := true,
+      dockerExposedPorts      := Seq(8000)
     )
   }
 
