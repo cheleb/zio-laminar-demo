@@ -1,6 +1,6 @@
 package com.example.ziolaminardemo.http.controllers
 
-import dev.cheleb.ziojwt.SecuredBaseController
+import dev.cheleb.ziotapir.SecuredBaseController
 
 import zio.*
 
@@ -13,10 +13,10 @@ import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 import com.example.ziolaminardemo.service.JWTService
 import com.example.ziolaminardemo.domain.errors.NotHostHeaderException
+import sttp.capabilities.zio.ZioStreams
 
 class PersonController private (personService: PersonService, jwtService: JWTService)
-    extends BaseController
-    with SecuredBaseController[String, UserID](jwtService.verifyToken) {
+    extends SecuredBaseController[String, UserID](jwtService.verifyToken) {
 
   val create: ServerEndpoint[Any, Task] = PersonEndpoint.create
     .zServerLogic:
@@ -33,8 +33,8 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     personService.getProfile(userId, withPet)
   }
 
-  val routes: List[ServerEndpoint[Any, Task]] =
-    List(create, login, profile)
+  val routes: (List[ServerEndpoint[Any, Task]], List[ZServerEndpoint[Any, ZioStreams]]) =
+    (List(create, login, profile), List.empty)
 }
 
 object PersonController {

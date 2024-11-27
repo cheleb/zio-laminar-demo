@@ -5,7 +5,7 @@ import be.doeraene.webcomponents.ui5.configkeys.*
 import com.raquo.laminar.api.L.*
 
 import dev.cheleb.scalamigen.*
-import dev.cheleb.ziolaminartapir.*
+import dev.cheleb.ziotapir.laminar.*
 
 import com.example.ziolaminardemo.login.LoginPassword
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
@@ -32,8 +32,8 @@ object Header:
           Icon(_.name := IconName.home, cls := "pad-10"),
           href := Router.uiRoute()
         ),
-        _.primaryTitle       := "ZIO Laminar Demo",
-        _.secondaryTitle     := "And Tapir, UI5, and more",
+        _.primaryTitle       := "zio-laminar-demo",
+        _.secondaryTitle     := "Great zio-laminar-demo",
         _.notificationsCount := "2+",
         _.showNotifications  := true,
         _.showCoPilot        := true,
@@ -86,8 +86,7 @@ object Header:
         .amend(
           onClick.mapTo(false) --> openPopoverBus
         ),
-         
-       _.item(_.icon := IconName.`bar-chart`, a("Statistics", href := Router.uiRoute("demos/scalablytyped"))),
+      _.item(_.icon := IconName.`bar-chart`, a("Statistics", href := Router.uiRoute("demos/scalablytyped"))),
       _.item(_.icon := IconName.log, "Sign out").amend(
         onClick --> { _ =>
           session.clearUserState()
@@ -99,6 +98,6 @@ object Header:
   def loginHandler(session: Session[UserToken]): Observer[Any] = Observer[Any] { _ =>
     PersonEndpoint
       .login(credentials.now())
-      .map(token => session.saveToken(SameOriginBackendClientLive.backendBaseURL, token))
+      .map(token => session.saveToken(token))
       .emitTo(loginSuccessEventBus, loginErrorEventBus)
   }

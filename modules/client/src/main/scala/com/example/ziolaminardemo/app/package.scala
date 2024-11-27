@@ -3,7 +3,7 @@ package com.example.ziolaminardemo.app
 import dev.cheleb.scalamigen.*
 import dev.cheleb.scalamigen.ui5.UI5WidgetFactory
 
-import dev.cheleb.ziolaminartapir.*
+import dev.cheleb.ziotapir.laminar.*
 
 import com.example.ziolaminardemo.domain.*
 
