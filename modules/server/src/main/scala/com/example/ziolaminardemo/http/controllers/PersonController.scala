@@ -33,8 +33,7 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     personService.getProfile(userId, withPet)
   }
 
-  val routes: (List[ServerEndpoint[Any, Task]], List[ZServerEndpoint[Any, ZioStreams]]) =
-    (List(create, login, profile), List.empty)
+  override val routes: List[ServerEndpoint[Any, Task]] = List(create, login, profile)
 }
 
 object PersonController {
