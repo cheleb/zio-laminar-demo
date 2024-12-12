@@ -11,7 +11,6 @@ import controllers.*
 
 import com.example.ziolaminardemo.service.*
 
-//https://tapir.softwaremill.com/en/latest/server/logic.html
 object HttpApi extends Routes {
 
   private def makeControllers = for {

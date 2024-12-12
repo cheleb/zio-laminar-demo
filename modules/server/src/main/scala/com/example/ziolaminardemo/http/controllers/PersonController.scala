@@ -33,7 +33,7 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     personService.getProfile(userId, withPet)
   }
 
-  override val routes: List[ServerEndpoint[Any, Task]] = List(create, login, profile)
+  override val routes: List[ServerEndpoint[Any, Task]] =List(create, login, profile)
 }
 
 object PersonController {
