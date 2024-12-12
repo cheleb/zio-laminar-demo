@@ -6,14 +6,15 @@ import sttp.tapir.server.ServerEndpoint
 import sttp.capabilities.zio.ZioStreams
 import sttp.tapir.ztapir.*
 
-class HealthController private
-    extends dev.cheleb.ziotapir.BaseController
-    with com.example.ziolaminardemo.http.endpoints.HealthEndpoint {
+import com.example.ziolaminardemo.http.endpoints.HealthEndpoint
+import dev.cheleb.ziotapir.BaseController
 
-  val health = healthEndpoint
+class HealthController private
+    extends BaseController {
+
+  val health = HealthEndpoint.healthEndpoint
     .serverLogicSuccess[Task](_ => ZIO.succeed("OK"))
-  override val routes: (List[ServerEndpoint[Any, Task]], List[ZServerEndpoint[Any, ZioStreams]]) =
-    (List(health), List.empty)
+  override val routes: List[ServerEndpoint[Any, Task]] = List(health)
 }
 
 object HealthController {
