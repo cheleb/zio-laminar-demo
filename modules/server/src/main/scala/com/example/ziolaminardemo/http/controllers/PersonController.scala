@@ -29,7 +29,7 @@ class PersonController private (personService: PersonService, jwtService: JWTSer
     } yield token
   }
 
-  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.securedServerLogic { userId => withPet =>
+  val profile: ServerEndpoint[Any, Task] = PersonEndpoint.profile.zServerAuthenticatedLogic { userId => withPet =>
     personService.getProfile(userId, withPet)
   }
 
