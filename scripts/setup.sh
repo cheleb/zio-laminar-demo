@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-
+set -e
+#
+# This script is used to setup the project
+# - Install npm dependencies
+# - Generate Scala.js bindings
+#
 . ./scripts/env.sh
 
 if [ ! -e $BUILD_ENV_FILE ]; then
@@ -8,8 +13,8 @@ if [ ! -e $BUILD_ENV_FILE ]; then
     echo
 
     until [ -e $BUILD_ENV_FILE ]; do
-      echo -n "."
-      sleep 4
+        echo -n "."
+        sleep 4
     done
 
     echo
@@ -19,11 +24,9 @@ if [ ! -e $BUILD_ENV_FILE ]; then
 
 fi
 
-
 . $BUILD_ENV_FILE
 
 rm -f $MAIN_JS_FILE
-
 
 filename_lock=node_modules/.package-lock.json
 
@@ -42,15 +45,28 @@ function npmInstall() {
     fi
 }
 
-cd modules/client
+pushd() {
+    command pushd "$@" >/dev/null
+}
 
+popd() {
+    command popd "$@" >/dev/null
+}
+
+pushd modules/client
 npmInstall
+popd
+
+pushd modules/shared/.js
+npmInstall
+popd
 
 #
 # Generating scalablytyped
 #
-cd scalablytyped
+pushd modules/client/scalablytyped
 npmInstall
-cd ../../..
+popd
+
 echo "Generating Scala.js bindings..."
 sbt -mem 8192 compile
