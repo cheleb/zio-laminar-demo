@@ -23,6 +23,6 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
 // TypeScript support
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
 // Giter8 support
-addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.16.2")
+addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.17.0")
 // Scalafix
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.13.0")
