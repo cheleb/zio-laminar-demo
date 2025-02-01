@@ -12,10 +12,7 @@ if [ ! -e $BUILD_ENV_FILE ]; then
     echo '  Import the project !!!'
     echo
 
-    until [ -e $BUILD_ENV_FILE ]; do
-        echo -n "."
-        sleep 4
-    done
+    sbt projects # Will generate the BUILD_ENV_FILE file
 
     echo
     echo

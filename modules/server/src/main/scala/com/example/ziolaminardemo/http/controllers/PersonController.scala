@@ -4,7 +4,6 @@ import dev.cheleb.ziotapir.SecuredBaseController
 
 import zio.*
 
-import sttp.model.Uri
 import sttp.tapir.server.ServerEndpoint
 import sttp.tapir.ztapir.*
 
@@ -12,8 +11,6 @@ import com.example.ziolaminardemo.domain.*
 import com.example.ziolaminardemo.http.endpoints.PersonEndpoint
 import com.example.ziolaminardemo.service.PersonService
 import com.example.ziolaminardemo.service.JWTService
-import com.example.ziolaminardemo.domain.errors.NotHostHeaderException
-import sttp.capabilities.zio.ZioStreams
 
 class PersonController private (personService: PersonService, jwtService: JWTService)
     extends SecuredBaseController[String, UserID](jwtService.verifyToken) {

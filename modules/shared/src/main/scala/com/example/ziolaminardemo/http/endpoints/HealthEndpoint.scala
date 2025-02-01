@@ -1,7 +1,6 @@
 package com.example.ziolaminardemo.http.endpoints
 
 import sttp.tapir.*
-import zio.*
 
 object HealthEndpoint {
   val healthEndpoint = endpoint

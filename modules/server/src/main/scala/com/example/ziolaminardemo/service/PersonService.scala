@@ -3,12 +3,10 @@ package com.example.ziolaminardemo.service
 import zio.*
 
 import io.scalaland.chimney.dsl._
-import java.time.Instant
 import java.time.ZonedDateTime
 
 import com.example.ziolaminardemo.domain.*
 import com.example.ziolaminardemo.domain.errors.*
-import com.example.ziolaminardemo.login.LoginPassword
 import com.example.ziolaminardemo.repositories.UserRepository
 import com.example.ziolaminardemo.UserEntity
 import com.example.ziolaminardemo.NewUserEntity
@@ -24,7 +22,6 @@ import io.getquill.jdbczio.Quill
 import io.getquill.SnakeCase
 import io.getquill.jdbczio.Quill.Postgres
 
-import io.scalaland.chimney.Transformer
 trait PersonService {
   def register(person: Person): Task[User]
   def login(email: String, password: String): Task[User]
@@ -34,7 +31,6 @@ trait PersonService {
 class PersonServiceLive private (
   userRepository: UserRepository,
   petRepository: PetRepository,
-  jwtService: JWTService,
   quill: Quill.Postgres[SnakeCase]
 ) extends PersonService
     with TransactionSupport(quill) {
@@ -107,6 +103,6 @@ class PersonServiceLive private (
 }
 
 object PersonServiceLive {
-  val layer: RLayer[UserRepository & PetRepository & JWTService & Postgres[SnakeCase], PersonService] =
+  val layer: RLayer[UserRepository & PetRepository & Postgres[SnakeCase], PersonService] =
     ZLayer.derive[PersonServiceLive]
 }

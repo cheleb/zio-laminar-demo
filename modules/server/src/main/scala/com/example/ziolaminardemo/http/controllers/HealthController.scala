@@ -3,8 +3,6 @@ package com.example.ziolaminardemo.http.controllers
 import zio.*
 import sttp.tapir.*
 import sttp.tapir.server.ServerEndpoint
-import sttp.capabilities.zio.ZioStreams
-import sttp.tapir.ztapir.*
 
 import com.example.ziolaminardemo.http.endpoints.HealthEndpoint
 import dev.cheleb.ziotapir.BaseController
