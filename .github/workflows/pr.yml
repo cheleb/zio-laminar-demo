@@ -23,4 +23,4 @@ jobs:
       - name: Install sbt
         uses: sbt/setup-sbt@v1
       - name: Compile Scala code
-        run: sbt test/compile
+        run: sbt Test/compile
