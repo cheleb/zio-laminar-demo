@@ -6,11 +6,11 @@ addSbtPlugin("org.scala-js" % "sbt-jsdependencies" % "1.0.2")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler"     % "0.21.1")
 addSbtPlugin("ch.epfl.scala" % "sbt-web-scalajs-bundler" % "0.21.1")
 
-addSbtPlugin("org.scalameta"  % "sbt-scalafmt"        % "2.5.2")
+addSbtPlugin("org.scalameta"  % "sbt-scalafmt"        % "2.5.4")
 addSbtPlugin("org.xerial.sbt" % "sbt-sonatype"        % "3.12.2")
-addSbtPlugin("com.github.sbt" % "sbt-ci-release"      % "1.5.12")
-addSbtPlugin("com.eed3si9n"   % "sbt-assembly"        % "2.3.0")
-addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.4")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release"      % "1.9.2")
+addSbtPlugin("com.eed3si9n"   % "sbt-assembly"        % "2.3.1")
+addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.11.1")
 // Static file generator
 addSbtPlugin("org.playframework.twirl" % "sbt-twirl" % "2.0.7")
 // Cross project support, to spread project resources between js and jvm world

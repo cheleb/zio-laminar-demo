@@ -7,7 +7,7 @@
     "chart.js": "2.9.4"
   },
   "devDependencies": {
-    "typescript": "5.7.2",
+    "typescript": "5.7.3",
     "@types/chart.js": "2.9.41"
   }
 }
