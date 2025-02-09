@@ -71,7 +71,5 @@ pushd modules/client/scalablytyped
 npmInstall
 popd
 
-ls ~/.ivy2/local/org.scalablytyped/
-
 echo "Generating Scala.js bindings..."
 sbt -mem 8192 compile
