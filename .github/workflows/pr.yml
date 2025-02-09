@@ -22,15 +22,21 @@ jobs:
           cache: sbt
       - name: Install sbt
         uses: sbt/setup-sbt@v1
-      - name: Restore cache
-        uses: actions/cache@v2
+      - name: Restore cache SBT
+        uses: actions/cache@v4
         with:
           path: |
             ~/.ivy2/cache
+            ~/.ivy2/local
             ~/.sbt
+          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt', 'project/*.sbt', 'project/*.scala') }}
+      - name: Restore cache node
+        uses: actions/cache@v4
+        with:
+          path: |
             modules/client/node_modules
             modules/client/scalablytyped/node_modules
-          key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt', 'project/**', 'modules/client/node_modules/*.json', 'modules/client/scalabytyped/node_modules/*.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('modules/client/node_modules/package.json', 'modules/client/scalabytyped/node_modules/package.json') }}
 
       - name: Compile Scala code
         run: ./scripts/setup.sh
