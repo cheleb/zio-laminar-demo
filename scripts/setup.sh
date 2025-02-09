@@ -28,12 +28,19 @@ rm -f $MAIN_JS_FILE
 filename_lock=node_modules/.package-lock.json
 
 function npmInstall() {
+
+    echo In $(pwd)
+
+    ls -l
+
     if [ ! -f "$filename_lock" ]; then
         echo "First time setup: Installing npm dependencies..."
         npm i
     else
         filename=package.json
+        echo $filename
         age=$(stat -t %s -f %m -- "$filename")
+        echo " - age: $age"
         age_lock=$(stat -t %s -f %m -- "$filename_lock")
         if [ $age_lock -lt $age ]; then
             echo "Updating npm dependencies..."
