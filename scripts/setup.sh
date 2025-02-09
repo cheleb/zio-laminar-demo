@@ -39,9 +39,9 @@ function npmInstall() {
     else
         filename=package.json
         echo $filename
-        age=$(stat -t %s -f %m -- "$filename")
+        age=$(stat -t '%s' -f '%m' -- "$filename")
         echo " - age: $age"
-        age_lock=$(stat -t %s -f %m -- "$filename_lock")
+        age_lock=$(stat -t '%s' -f '%m' -- "$filename_lock")
         if [ $age_lock -lt $age ]; then
             echo "Updating npm dependencies..."
             npm i
