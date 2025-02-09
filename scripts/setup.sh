@@ -39,13 +39,22 @@ function npmInstall() {
     else
         filename=package.json
         echo $filename
-        age=$(stat -t '%s' -f '%m' -- "$filename")
+        age=$(lastModified $filename)
         echo " - age: $age"
-        age_lock=$(stat -t '%s' -f '%m' -- "$filename_lock")
+        age_lock=$(lastModified $filename_lock)
         if [ $age_lock -lt $age ]; then
             echo "Updating npm dependencies..."
             npm i
         fi
+    fi
+}
+
+# Linux and MacOS have different stat commands
+lastModified() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        stat -f %m "$1"
+    else
+        stat -c %Y "$1"
     fi
 }
 
