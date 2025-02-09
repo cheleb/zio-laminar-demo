@@ -31,7 +31,6 @@ jobs:
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt', 'project/*.sbt', 'project/*.scala') }}
           restore-keys: |
-            ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt', 'project/*.sbt', 'project/*.scala') }}
             ${{ runner.os }}-sbt-
       - name: Restore cache node
         uses: actions/cache@v4
