@@ -29,18 +29,12 @@ filename_lock=node_modules/.package-lock.json
 
 function npmInstall() {
 
-    echo In $(pwd)
-
-    ls -l
-
     if [ ! -f "$filename_lock" ]; then
         echo "First time setup: Installing npm dependencies..."
         npm i
     else
         filename=package.json
-        echo $filename
         age=$(lastModified $filename)
-        echo " - age: $age"
         age_lock=$(lastModified $filename_lock)
         if [ $age_lock -lt $age ]; then
             echo "Updating npm dependencies..."
@@ -76,6 +70,8 @@ popd
 pushd modules/client/scalablytyped
 npmInstall
 popd
+
+ls ~/.ivy2/local/org.scalablytyped/
 
 echo "Generating Scala.js bindings..."
 sbt -mem 8192 compile
