@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "dependencies": {
-    "chart.js": "2.9.4"
+    "chart.js": "4.4.7"
   },
   "devDependencies": {
     "typescript": "5.7.3",
