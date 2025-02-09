@@ -38,7 +38,13 @@ function npmInstall() {
         age_lock=$(lastModified $filename_lock)
         if [ $age_lock -lt $age ]; then
             echo "Updating npm dependencies..."
-            npm i
+            if [ -n "$CI" ]; then
+                echo "Running in CI environment, skipping npm install."
+                npm ci
+            else
+                npm i
+            fi
+
         fi
     fi
 }
