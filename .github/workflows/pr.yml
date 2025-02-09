@@ -28,6 +28,7 @@ jobs:
           path: |
             ~/.ivy2/cache
             ~/.ivy2/local
+            **/target/**
             ~/.sbt
           key: ${{ runner.os }}-sbt-${{ hashFiles('**/build.sbt', 'project/*.sbt', 'project/*.scala') }}
           restore-keys: |

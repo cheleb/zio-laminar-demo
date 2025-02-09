@@ -28,17 +28,33 @@ rm -f $MAIN_JS_FILE
 filename_lock=node_modules/.package-lock.json
 
 function npmInstall() {
+
     if [ ! -f "$filename_lock" ]; then
         echo "First time setup: Installing npm dependencies..."
         npm i
     else
         filename=package.json
-        age=$(stat -t %s -f %m -- "$filename")
-        age_lock=$(stat -t %s -f %m -- "$filename_lock")
+        age=$(lastModified $filename)
+        age_lock=$(lastModified $filename_lock)
         if [ $age_lock -lt $age ]; then
             echo "Updating npm dependencies..."
-            npm i
+            if [ -n "$CI" ]; then
+                echo "Running in CI environment, skipping npm install."
+                npm ci
+            else
+                npm i
+            fi
+
         fi
+    fi
+}
+
+# Linux and MacOS have different stat commands
+lastModified() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        stat -f %m "$1"
+    else
+        stat -c %Y "$1"
     fi
 }
 
