@@ -11,7 +11,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ui5/webcomponents": "2.7.1",
+    "@ui5/webcomponents": "2.7.2",
     "@ui5/webcomponents-fiori": "2.7.2",
     "@ui5/webcomponents-icons": "2.7.2",
     "chart.js": "2.9.4"
