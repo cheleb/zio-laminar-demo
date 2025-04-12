@@ -137,13 +137,6 @@ object DeploymentSettings {
       )
       .toSeq
 
-  def symlink(link: File, target: File): Unit = {
-    if (!(Files.exists(link.getParentFile.toPath)))
-      Files.createDirectories(link.getParentFile.toPath)
-    if (!(Files.exists(link.toPath) || Files.isSymbolicLink(link.toPath)))
-      if (Files.exists(target.toPath))
-        Files.createSymbolicLink(link.toPath, link.toPath.getParent.relativize(target.toPath))
-  }
   def insureBuildEnvFile(baseDirectory: File, scalaVersion: String) = {
 
     val outputFile = baseDirectory / "scripts" / "target" / "build-env.sh"
