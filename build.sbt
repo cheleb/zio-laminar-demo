@@ -77,7 +77,7 @@ lazy val client = scalajsProject("client")
           config
             .withModuleKind(ModuleKind.ESModule)
             .withSourceMap(false)
-            .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("com.example.ziolaminardemo")))
+            .withModuleSplitStyle(ModuleSplitStyle.FewestModules)
       }
     }
   )
@@ -206,17 +206,5 @@ Global / onLoad := {
 
   insureBuildEnvFile(baseDirectory.value, (client / scalaVersion).value)
 
-  // This is hack to share static files between server and client.
-  // It creates symlinks from server to client static files
-  // Ideally, we should use a shared folder for static files
-  // Or use a shared CDN
-  // Or copy the files to the target directory of the server at build time.
-  // symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
-  // symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
-  // symlink(server.base / "src" / "main" / "public" / "res", client.base / "res")
-
-  // symlink(server.base / "src" / "main" / "resources" / "public" / "img", client.base / "img")
-  // symlink(server.base / "src" / "main" / "resources" / "public" / "css", client.base / "css")
-  // symlink(server.base / "src" / "main" / "resources" / "public" / "res", client.base / "res")
   (Global / onLoad).value
 }
