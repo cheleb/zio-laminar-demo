@@ -91,32 +91,6 @@ lazy val client = scalajsProject("client")
     publish / skip := true
   )
 
-val buildClient = taskKey[Unit]("Build client (frontend)")
-buildClient := {
-  // Generate Scala.js JS output for production
-  val rootFolder = (server / Compile / resourceManaged).value / publicFolder
-  rootFolder.mkdirs()
-
-  // Install JS dependencies from package-lock.json
-  val npmCiExitCode = Process("npm ci", cwd = (client / baseDirectory).value).!
-  if (npmCiExitCode > 0) {
-    throw new IllegalStateException(s"npm ci failed. See above for reason")
-  }
-
-  // Build the frontend with vite
-  val buildExitCode = Process(
-    s"npm run build -- --emptyOutDir --outDir ${rootFolder.getAbsolutePath}",
-    cwd = (client / baseDirectory).value
-  ).!
-  if (buildExitCode > 0) {
-    throw new IllegalStateException(s"Building frontend failed. See above for reason")
-  }
-
-  streams.value.log.info("Client build completed and static files copied to server resources.")
-}
-
-//(server / `package`) := (server / `package`).dependsOn(buildClient).value
-
 //
 // Server project
 // It depends on sharedJvm project, a project that contains shared code between server and client
