@@ -24,6 +24,8 @@ import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
 
 import webscalajs.WebScalaJS.autoImport._
 
+import scala.collection.JavaConverters._
+
 object DeploymentSettings {
 //
 // Define the build mode:
@@ -39,7 +41,7 @@ object DeploymentSettings {
 //
 // Default is "demo" mode, because the vite build does not take parameters.
 //   (see vite.config.js)
-  val mode = sys.env.get("MOD").getOrElse("demo")
+  val mode = sys.env.get("MOD").getOrElse("ESModule")
 
   val overrideDockerRegistry = sys.env.get("LOCAL_DOCKER_REGISTRY").isDefined
 
@@ -48,31 +50,6 @@ object DeploymentSettings {
 //
 // On dev mode, server will only serve API and static files.
 //
-  val serverPlugins = mode match {
-    case "CommonJs" =>
-      Seq(SbtWeb, SbtTwirl, JavaAppPackaging, WebScalaJSBundlerPlugin, DockerPlugin, AshScriptPlugin)
-    case "ESModule" =>
-      Seq(SbtTwirl, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
-    case _ => Seq()
-  }
-
-  def scalaJSModule = mode match {
-    case "CommonJs" => ModuleKind.CommonJSModule
-    case _          => ModuleKind.ESModule
-  }
-
-  def serverSettings(clientProjects: Project*) = mode match {
-    case "CommonJs" =>
-      Seq(
-        Compile / compile              := ((Compile / compile) dependsOn scalaJSPipeline).value,
-        Assets / WebKeys.packagePrefix := s"$publicFolder/",
-        Runtime / managedClasspath += (Assets / packageBin).value,
-        scalaJSProjects         := clientProjects,
-        Assets / pipelineStages := Seq(scalaJSPipeline)
-      ) ++ dockerSettings
-    case "ESModule" => dockerSettings
-    case _          => Seq()
-  }
 
   def staticGenerationSettings(generator: Project, client: Project) = mode match {
     case "CommonJs" =>
@@ -97,60 +74,37 @@ object DeploymentSettings {
           .taskValue
       )
     case "ESModule" =>
+      val taskOutputDir = settingKey[File]("Resource directory for task output")
+
+      // ADD THIS to preserve directory structure
       Seq(
-        (Compile / resourceGenerators) += Def
-          .taskDyn[Seq[File]] {
-            val rootFolder = (Compile / resourceManaged).value / publicFolder
-            rootFolder.mkdirs()
+        Assets / WebKeys.packagePrefix := s"$publicFolder/",
+        taskOutputDir                  := (Assets / resourceManaged).value / publicFolder,
+        Assets / resourceDirectories += taskOutputDir.value,
+        Runtime / managedClasspath += (Assets / packageBin).value,
+        (Assets / resourceGenerators) += Def.task {
+          val rootFolder = (Assets / resourceManaged).value / publicFolder
+          rootFolder.mkdirs()
 
-            Def.task {
-              if (
-                scala.sys.process
-                  .Process(
-                    List("npm", "run", "build", "--", "--emptyOutDir", "--outDir", rootFolder.getAbsolutePath),
-                    (client / baseDirectory).value
-                  )
-                  .! == 0
-              ) {
-                println(s"Generated static files in ${rootFolder}")
-                (rootFolder ** "*.*").get
-              } else {
-                println(s"Failed to generate static files in ${rootFolder}")
-                throw new IllegalStateException("Vite build failed")
-              }
-
-            }
-
+          if (
+            scala.sys.process
+              .Process(
+                List("npm", "run", "build", "--", "--emptyOutDir", "--outDir", rootFolder.getAbsolutePath),
+                (client / baseDirectory).value
+              )
+              .! == 0
+          ) {
+            println(s"** Generated static files in ${rootFolder}")
+            (rootFolder ** "*.*").get
+          } else {
+            println(s"Failed to generate static files in ${rootFolder}")
+            throw new IllegalStateException("Vite build failed")
           }
-          .taskValue
+
+        }.taskValue
       )
     case _ =>
       Seq()
-  }
-
-  //
-  // ScalablyTyped settings
-  //
-  val scalablyTypedPlugin = mode match {
-    case "CommonJs" => ScalablyTypedConverterPlugin
-    case _      => ScalablyTypedConverterExternalNpmPlugin
-  }
-
-  val scalablytypedSettings = mode match {
-    case "CommonJs" =>
-      Seq(
-        Compile / npmDependencies ++= Seq(
-          "chart.js"        -> "2.9.4",
-          "@types/chart.js" -> "2.9.41"
-        ),
-        webpack / version      := "5.96.1",
-        scalaJSStage in Global := FullOptStage,
-        webpackBundlingMode    := BundlingMode.LibraryAndApplication()
-      )
-    case _ =>
-      Seq(externalNpm := {
-        baseDirectory.value / "scalablytyped"
-      })
   }
 
   def nexusNpmSettings =
@@ -162,11 +116,6 @@ object DeploymentSettings {
         )
       )
       .toSeq
-
-  def scalaJSPlugin = mode match {
-    case "CommonJs" => ScalaJSBundlerPlugin
-    case _          => ScalaJSPlugin
-  }
 
   def symlink(link: File, target: File): Unit = {
     if (!(Files.exists(link.getParentFile.toPath)))
@@ -216,7 +165,7 @@ object DeploymentSettings {
       Docker / maintainer     := "Joh doe",
       Docker / dockerUsername := Some("johndoe"),
       Docker / packageName    := "zio-laminar-demo",
-      dockerBaseImage         := "azul/zulu-openjdk-alpine:23-latest",
+      dockerBaseImage         := "azul/zulu-openjdk-alpine:24-latest",
       dockerRepository        := Some("registry.orb.local"),
       dockerUpdateLatest      := true,
       dockerExposedPorts      := Seq(8000)

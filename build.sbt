@@ -1,5 +1,5 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
-
+import scala.sys.process.Process
 import Dependencies._
 //
 // Will handle different build modes:
@@ -60,12 +60,70 @@ lazy val root = project
   )
 
 //
+// Client project
+// It depends on sharedJs project, a project that contains shared code between server and client.
+//
+lazy val client = scalajsProject("client")
+  .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
+  .settings(
+    scalaJSUseMainModuleInitializer := true,
+    scalaJSLinkerConfig ~= { config =>
+      mode match {
+        case "ESModule" =>
+          config
+            .withModuleKind(ModuleKind.ESModule)
+
+        case _ =>
+          config
+            .withModuleKind(ModuleKind.ESModule)
+            .withSourceMap(false)
+            .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("com.example.ziolaminardemo")))
+      }
+    }
+  )
+  .settings(scalacOptions ++= usedScalacOptions)
+  .settings(clientLibraryDependencies)
+  .settings(
+    externalNpm := baseDirectory.value / "scalablytyped"
+  )
+  .dependsOn(sharedJs)
+  .settings(
+    publish / skip := true
+  )
+
+val buildClient = taskKey[Unit]("Build client (frontend)")
+buildClient := {
+  // Generate Scala.js JS output for production
+  val rootFolder = (server / Compile / resourceManaged).value / publicFolder
+  rootFolder.mkdirs()
+
+  // Install JS dependencies from package-lock.json
+  val npmCiExitCode = Process("npm ci", cwd = (client / baseDirectory).value).!
+  if (npmCiExitCode > 0) {
+    throw new IllegalStateException(s"npm ci failed. See above for reason")
+  }
+
+  // Build the frontend with vite
+  val buildExitCode = Process(
+    s"npm run build -- --emptyOutDir --outDir ${rootFolder.getAbsolutePath}",
+    cwd = (client / baseDirectory).value
+  ).!
+  if (buildExitCode > 0) {
+    throw new IllegalStateException(s"Building frontend failed. See above for reason")
+  }
+
+  streams.value.log.info("Client build completed and static files copied to server resources.")
+}
+
+//(server / `package`) := (server / `package`).dependsOn(buildClient).value
+
+//
 // Server project
 // It depends on sharedJvm project, a project that contains shared code between server and client
 //
 lazy val server = project
   .in(file("modules/server"))
-  .enablePlugins(serverPlugins: _*)
+  .enablePlugins(SbtTwirl, SbtWeb, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
   .settings(
     staticGenerationSettings(generator, client)
   )
@@ -74,10 +132,23 @@ lazy val server = project
     serverLibraryDependencies,
     testingLibraryDependencies
   )
-  .settings(serverSettings(client): _*)
+  .settings(dockerSettings)
   .dependsOn(sharedJvm)
   .settings(
     publish / skip := true
+  )
+  .settings(
+    assembly / mainClass       := Some("com.example.ziolaminardemo.http.HttpServer"),
+    assembly / assemblyJarName := "app.jar",
+
+    // Gets rid of "(server / assembly) deduplicate: different file contents found in the following" errors
+    // https://stackoverflow.com/questions/54834125/sbt-assembly-deduplicate-module-info-class
+    assembly / assemblyMergeStrategy := {
+      case path if path.endsWith("module-info.class") => MergeStrategy.discard
+      case path =>
+        val oldStrategy = (assembly / assemblyMergeStrategy).value
+        oldStrategy(path)
+    }
   )
 
 val usedScalacOptions = Seq(
@@ -89,45 +160,6 @@ val usedScalacOptions = Seq(
   "-Xmax-inlines:64",
   "-Wunused:all"
 )
-
-//
-// Client project
-// It depends on sharedJs project, a project that contains shared code between server and client.
-//
-lazy val client = scalajsProject("client")
-  .enablePlugins(scalablyTypedPlugin)
-  .settings(
-    scalaJSUseMainModuleInitializer := true,
-    scalaJSLinkerConfig ~= { config =>
-      mode match {
-        case "CommonJs" =>
-          config
-            .withModuleKind(scalaJSModule)
-            .withMinify(true)
-            .withOptimizer(true)
-            .withClosureCompiler(true)
-
-        case "ESModule" =>
-          config
-            .withModuleKind(scalaJSModule)
-
-        case _ =>
-          config
-            .withModuleKind(scalaJSModule)
-            .withSourceMap(false)
-            .withModuleSplitStyle(ModuleSplitStyle.SmallModulesFor(List("com.example.ziolaminardemo")))
-      }
-    }
-  )
-  .settings(scalacOptions ++= usedScalacOptions)
-  .settings(clientLibraryDependencies)
-  .settings(
-    scalablytypedSettings
-  )
-  .dependsOn(sharedJs)
-  .settings(
-    publish / skip := true
-  )
 
 //
 // Shared project
@@ -153,7 +185,7 @@ def scalajsProject(projectId: String): Project =
     id = projectId,
     base = file(s"modules/$projectId")
   )
-    .enablePlugins(scalaJSPlugin)
+    .enablePlugins(ScalaJSPlugin)
     .disablePlugins(RevolverPlugin)
     .settings(nexusNpmSettings)
     .settings(Test / requireJsDomEnv := true)
@@ -179,12 +211,12 @@ Global / onLoad := {
   // Ideally, we should use a shared folder for static files
   // Or use a shared CDN
   // Or copy the files to the target directory of the server at build time.
-  symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
-  symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
-  symlink(server.base / "src" / "main" / "public" / "res", client.base / "res")
+  // symlink(server.base / "src" / "main" / "public" / "img", client.base / "img")
+  // symlink(server.base / "src" / "main" / "public" / "css", client.base / "css")
+  // symlink(server.base / "src" / "main" / "public" / "res", client.base / "res")
 
-  symlink(server.base / "src" / "main" / "resources" / "public" / "img", client.base / "img")
-  symlink(server.base / "src" / "main" / "resources" / "public" / "css", client.base / "css")
-  symlink(server.base / "src" / "main" / "resources" / "public" / "res", client.base / "res")
+  // symlink(server.base / "src" / "main" / "resources" / "public" / "img", client.base / "img")
+  // symlink(server.base / "src" / "main" / "resources" / "public" / "css", client.base / "css")
+  // symlink(server.base / "src" / "main" / "resources" / "public" / "res", client.base / "res")
   (Global / onLoad).value
 }
