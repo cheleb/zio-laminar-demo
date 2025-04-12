@@ -76,14 +76,19 @@ object DeploymentSettings {
     case "ESModule" =>
       val taskOutputDir = settingKey[File]("Resource directory for task output")
 
-      // ADD THIS to preserve directory structure
       Seq(
-        Assets / WebKeys.packagePrefix := s"$publicFolder/",
-        taskOutputDir                  := (Assets / resourceManaged).value / publicFolder,
+        // ADD THIS to preserve directory structure.
+        // If baseDirectory is not set, the relative path cannot be
+        // calculated correctly.
+        // This is needed for the webjar packaging.
+        taskOutputDir := (Assets / resourceManaged).value / publicFolder,
         Assets / resourceDirectories += taskOutputDir.value,
+        // Prefix the resource path with the public folder
+        Assets / WebKeys.packagePrefix := s"$publicFolder/",
+        // Add webjar resources to the classpath.
         Runtime / managedClasspath += (Assets / packageBin).value,
         (Assets / resourceGenerators) += Def.task {
-          val rootFolder = (Assets / resourceManaged).value / publicFolder
+          val rootFolder = taskOutputDir.value
           rootFolder.mkdirs()
 
           if (
