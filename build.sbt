@@ -111,19 +111,6 @@ lazy val server = project
   .settings(
     publish / skip := true
   )
-  .settings(
-    assembly / mainClass       := Some("com.example.ziolaminardemo.http.HttpServer"),
-    assembly / assemblyJarName := "app.jar",
-
-    // Gets rid of "(server / assembly) deduplicate: different file contents found in the following" errors
-    // https://stackoverflow.com/questions/54834125/sbt-assembly-deduplicate-module-info-class
-    assembly / assemblyMergeStrategy := {
-      case path if path.endsWith("module-info.class") => MergeStrategy.discard
-      case path =>
-        val oldStrategy = (assembly / assemblyMergeStrategy).value
-        oldStrategy(path)
-    }
-  )
 
 val usedScalacOptions = Seq(
   "-encoding",
