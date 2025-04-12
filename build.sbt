@@ -1,5 +1,5 @@
 import org.scalajs.linker.interface.ModuleSplitStyle
-import scala.sys.process.Process
+
 import Dependencies._
 //
 // Will handle different build modes:
@@ -72,7 +72,6 @@ lazy val client = scalajsProject("client")
         case "ESModule" =>
           config
             .withModuleKind(ModuleKind.ESModule)
-
         case _ =>
           config
             .withModuleKind(ModuleKind.ESModule)
@@ -83,9 +82,7 @@ lazy val client = scalajsProject("client")
   )
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(clientLibraryDependencies)
-  .settings(
-    externalNpm := baseDirectory.value / "scalablytyped"
-  )
+  .settings(externalNpm := baseDirectory.value / "scalablytyped")
   .dependsOn(sharedJs)
   .settings(
     publish / skip := true
