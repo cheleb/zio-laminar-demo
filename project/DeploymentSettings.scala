@@ -1,39 +1,16 @@
-import com.typesafe.sbt.packager.archetypes.JavaAppPackaging
-import com.typesafe.sbt.packager.archetypes.scripts.AshScriptPlugin
-import com.typesafe.sbt.packager.docker.DockerPlugin
-import com.typesafe.sbt.SbtNativePackager.autoImport._
 import com.typesafe.sbt.web._
 import com.typesafe.sbt.web.Import._
 
 import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-import org.scalablytyped.converter.plugin._
-import org.scalablytyped.converter.plugin.STKeys._
-import org.scalajs.sbtplugin._
-
-import play.twirl.sbt.SbtTwirl
 
 import sbt._
 import sbt.Keys._
-
-import scalajsbundler.sbtplugin._
-import scalajsbundler.sbtplugin.WebScalaJSBundlerPlugin
-import scalajsbundler.sbtplugin.ScalaJSBundlerPlugin.autoImport._
-
-import webscalajs.WebScalaJS.autoImport._
-
-import scala.collection.JavaConverters._
 
 import scala.sys.process.{Process => ScalaProcess}
 
 object DeploymentSettings {
 //
 // Define the build mode:
-// - CommonJs: production mode, aka with BFF and webjar deployment
-//         optimized, CommonJSModule
-//         webjar packaging
 // - ESModule: demo mode (default)
 //         optimized, CommonJSModule
 //         static files
@@ -127,16 +104,6 @@ object DeploymentSettings {
     }
   }
 
-  def nexusNpmSettings =
-    sys.env
-      .get("NEXUS")
-      .map(url =>
-        npmExtraArgs ++= Seq(
-          s"--registry=$url/repository/npm-public/"
-        )
-      )
-      .toSeq
-
   def insureBuildEnvFile(baseDirectory: File, scalaVersion: String) = {
 
     val outputFile = baseDirectory / "scripts" / "target" / "build-env.sh"
@@ -168,29 +135,6 @@ object DeploymentSettings {
       writeBuildEnvFile()
     }
 
-  }
-
-  lazy val dockerSettings = {
-    import DockerPlugin.autoImport._
-    import DockerPlugin.globalSettings._
-    import sbt.Keys._
-    Seq(
-      Docker / maintainer     := "Joh doe",
-      Docker / dockerUsername := Some("johndoe"),
-      Docker / packageName    := "zio-laminar-demo",
-      dockerBaseImage         := "azul/zulu-openjdk-alpine:24-latest",
-      dockerRepository        := Some("registry.orb.local"),
-      dockerUpdateLatest      := true,
-      dockerExposedPorts      := Seq(8000)
-    ) ++ (overrideDockerRegistry match {
-      case true =>
-        Seq(
-          Docker / dockerRepository := Some("registry.orb.local"),
-          Docker / dockerUsername   := Some("zio-laminar-demo")
-        )
-      case false =>
-        Seq()
-    })
   }
 
 }

@@ -187,7 +187,6 @@ def scalajsProject(projectId: String): Project =
   )
     .enablePlugins(ScalaJSPlugin)
     .disablePlugins(RevolverPlugin)
-    .settings(nexusNpmSettings)
     .settings(Test / requireJsDomEnv := true)
     .settings(
       scalacOptions := Seq(
@@ -197,6 +196,29 @@ def scalajsProject(projectId: String): Project =
         "-Xfatal-warnings"
       )
     )
+
+lazy val dockerSettings = {
+  import DockerPlugin.autoImport._
+  import DockerPlugin.globalSettings._
+  import sbt.Keys._
+  Seq(
+    Docker / maintainer     := "Joh doe",
+    Docker / dockerUsername := Some("johndoe"),
+    Docker / packageName    := "zio-laminar-demo",
+    dockerBaseImage         := "azul/zulu-openjdk-alpine:24-latest",
+    dockerRepository        := Some("registry.orb.local"),
+    dockerUpdateLatest      := true,
+    dockerExposedPorts      := Seq(8000)
+  ) ++ (overrideDockerRegistry match {
+    case true =>
+      Seq(
+        Docker / dockerRepository := Some("registry.orb.local"),
+        Docker / dockerUsername   := Some("zio-laminar-demo")
+      )
+    case false =>
+      Seq()
+  })
+}
 
 //
 // This is a global setting that will generate a build-env.sh file in the target directory.
