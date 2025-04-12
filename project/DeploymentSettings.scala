@@ -26,6 +26,8 @@ import webscalajs.WebScalaJS.autoImport._
 
 import scala.collection.JavaConverters._
 
+import scala.sys.process.{Process => ScalaProcess}
+
 object DeploymentSettings {
 //
 // Define the build mode:
@@ -91,25 +93,32 @@ object DeploymentSettings {
           val rootFolder = taskOutputDir.value
           rootFolder.mkdirs()
 
-          if (
-            scala.sys.process
-              .Process(
-                List("npm", "run", "build", "--", "--emptyOutDir", "--outDir", rootFolder.getAbsolutePath),
-                (client / baseDirectory).value
-              )
-              .! == 0
-          ) {
-            println(s"** Generated static files in ${rootFolder}")
-            (rootFolder ** "*.*").get
-          } else {
-            println(s"Failed to generate static files in ${rootFolder}")
-            throw new IllegalStateException("Vite build failed")
-          }
+          runCommand(
+            (client / baseDirectory).value,
+            streams.value.log,
+            "npm",
+            "run",
+            "build",
+            "--",
+            "--emptyOutDir",
+            "--outDir",
+            rootFolder.getAbsolutePath
+          )((rootFolder ** "*.*").get)
 
         }.taskValue
       )
     case _ =>
       Seq()
+  }
+
+  def runCommand[R](cwd: File, log: Logger, command: String*)(res: => R): R = {
+    val exitCode = ScalaProcess(command, cwd).!
+    if (exitCode == 0) {
+      log.debug(s"Command succeeded: ${command.mkString(" ")}")
+      res
+    } else {
+      throw new IllegalStateException(s"Command failed with exit code $exitCode")
+    }
   }
 
   def nexusNpmSettings =
