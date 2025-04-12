@@ -96,14 +96,21 @@ object DeploymentSettings {
           runCommand(
             (client / baseDirectory).value,
             streams.value.log,
-            "npm",
-            "run",
-            "build",
-            "--",
-            "--emptyOutDir",
-            "--outDir",
-            rootFolder.getAbsolutePath
-          )((rootFolder ** "*.*").get)
+            s"npm run build -- --emptyOutDir --outDir ${rootFolder.getAbsolutePath}"
+          )
+          IO.copyDirectory(
+            (client / baseDirectory).value / "img",
+            rootFolder / "img",
+            overwrite = true,
+            preserveLastModified = true
+          )
+          IO.copyDirectory(
+            (client / baseDirectory).value / "css",
+            rootFolder / "css",
+            overwrite = true,
+            preserveLastModified = true
+          )
+          (rootFolder ** "*.*").get
 
         }.taskValue
       )
@@ -111,11 +118,10 @@ object DeploymentSettings {
       Seq()
   }
 
-  def runCommand[R](cwd: File, log: Logger, command: String*)(res: => R): R = {
+  def runCommand[R](cwd: File, log: Logger, command: String): Unit = {
     val exitCode = ScalaProcess(command, cwd).!
     if (exitCode == 0) {
       log.debug(s"Command succeeded: ${command.mkString(" ")}")
-      res
     } else {
       throw new IllegalStateException(s"Command failed with exit code $exitCode")
     }
