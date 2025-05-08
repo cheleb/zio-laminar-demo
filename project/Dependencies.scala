@@ -3,7 +3,7 @@ import sbt.Keys._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
-  val Versions = new {
+  object Versions {
     val auth0                 = "4.5.0"
     val chimney               = "1.6.0"
     val flywaydb              = "11.8.1"

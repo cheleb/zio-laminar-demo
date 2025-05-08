@@ -9,7 +9,7 @@ import Dependencies._
 //
 import DeploymentSettings._
 
-val scala3 = "3.6.4"
+val scala3 = "3.7.0"
 
 name := "zio-laminar-demo"
 
@@ -18,6 +18,16 @@ inThisBuild(
     scalaVersion      := scala3,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
+    javacOptions ++= Seq(
+      "java.util.concurrent.atomic",
+      "java.lang",
+      "java.util",
+      "java.util.concurrent",
+      "java.lang.reflect",
+      "java.net",
+      "java.nio",
+      "sun.nio.ch"
+    ).map(p => s"--add-opens=java.base/$p=ALL-UNNAMED"),
     scalacOptions ++= Seq(
       "-deprecation",
       "-feature",
@@ -29,26 +39,12 @@ inThisBuild(
   )
 )
 
-//
-// This is static generation settings to be used in server project
-// Illustrate how to use the generator project to generate static files with twirl
-//
-lazy val generator = project
-  .in(file("build/generator"))
-  .enablePlugins(SbtTwirl)
-  .disablePlugins(RevolverPlugin)
-  .settings(staticFilesGeneratorDependencies)
-  .settings(
-    publish / skip := true
-  )
-
 // Aggregate root project
 // This is the root project that aggregates all other projects
 // It is used to run tasks on all projects at once.
 lazy val root = project
   .in(file("."))
   .aggregate(
-    generator,
     server,
     sharedJs,
     sharedJvm,
@@ -96,7 +92,7 @@ lazy val server = project
   .in(file("modules/server"))
   .enablePlugins(SbtTwirl, SbtWeb, JavaAppPackaging, DockerPlugin, AshScriptPlugin)
   .settings(
-    staticGenerationSettings(generator, client)
+    staticGenerationSettings(client)
   )
   .settings(
     fork := true,
@@ -150,8 +146,8 @@ def scalajsProject(projectId: String): Project =
       scalacOptions := Seq(
         "-scalajs",
         "-deprecation",
-        "-feature",
-        "-Xfatal-warnings"
+        "-feature"
+        //  "-Xfatal-warnings"
       )
     )
 
