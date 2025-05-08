@@ -96,7 +96,7 @@ object Dependencies {
 
   val clientLibraryDependencies: Setting[Seq[ModuleID]] =
     libraryDependencies ++= Seq(
-      // pull laminar 17.1.0
+      // pull laminar 17.1.1
       "dev.cheleb" %%% "laminar-form-derivation-ui5" % Versions.laminarFormDerivation,
       // pull tapir-sttp-client and zio-tapir
       "dev.cheleb"    %%% "zio-tapir-laminar" % Versions.zioLaminarTapir,

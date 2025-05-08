@@ -18,16 +18,6 @@ inThisBuild(
     scalaVersion      := scala3,
     semanticdbEnabled := true,
     semanticdbVersion := scalafixSemanticdb.revision,
-    javacOptions ++= Seq(
-      "java.util.concurrent.atomic",
-      "java.lang",
-      "java.util",
-      "java.util.concurrent",
-      "java.lang.reflect",
-      "java.net",
-      "java.nio",
-      "sun.nio.ch"
-    ).map(p => s"--add-opens=java.base/$p=ALL-UNNAMED"),
     scalacOptions ++= Seq(
       "-deprecation",
       "-feature",
@@ -147,7 +137,7 @@ def scalajsProject(projectId: String): Project =
         "-scalajs",
         "-deprecation",
         "-feature"
-        //  "-Xfatal-warnings"
+//        "-Xfatal-warnings"
       )
     )
 

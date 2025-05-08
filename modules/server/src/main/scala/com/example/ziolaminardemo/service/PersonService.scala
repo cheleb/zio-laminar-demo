@@ -55,24 +55,24 @@ class PersonServiceLive private (
           _           <- ZIO.logDebug(s"Registering user: $person")
           newPetEntity = person.pet.fold(PetEntity.apply, PetEntity.apply)
           petEntity   <- petRepository.create(newPetEntity)
-          user <- userRepository
-                    .create(
-                      NewUserEntity(
-                        None,
-                        name = person.name,
-                        email = person.email,
-                        hashedPassword = Hasher.generatedHash(person.password.toString),
-                        petType = Some(person.pet.fold(_ => PetType.Cat, _ => PetType.Dog)),
-                        petId = Some(petEntity.id),
-                        age = person.age,
-                        creationDate = ZonedDateTime.now()
-                      )
-                    )
-                    .catchSome { case e: SQLException =>
-                      ZIO.logError(s"Error code: ${e.getSQLState} while creating user: ${e.getMessage}")
-                        *> ZIO.fail(UserAlreadyExistsException())
-                    }
-                    .mapInto[User]
+          user        <- userRepository
+                           .create(
+                             NewUserEntity(
+                               None,
+                               name = person.name,
+                               email = person.email,
+                               hashedPassword = Hasher.generatedHash(person.password.toString),
+                               petType = Some(person.pet.fold(_ => PetType.Cat, _ => PetType.Dog)),
+                               petId = Some(petEntity.id),
+                               age = person.age,
+                               creationDate = ZonedDateTime.now()
+                             )
+                           )
+                           .catchSome { case e: SQLException =>
+                             ZIO.logError(s"Error code: ${e.getSQLState} while creating user: ${e.getMessage}")
+                               *> ZIO.fail(UserAlreadyExistsException())
+                           }
+                           .mapInto[User]
         } yield user
       )
   override def login(email: String, password: String): Task[User] =
