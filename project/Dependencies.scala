@@ -3,7 +3,7 @@ import sbt.Keys._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
-  val Versions = new {
+  object Versions {
     val auth0                 = "4.5.0"
     val chimney               = "1.6.0"
     val flywaydb              = "11.8.1"
@@ -21,7 +21,7 @@ object Dependencies {
     val tapir                 = "1.11.24"
     val zio                   = "2.1.17"
     val zioConfig             = "4.0.2"
-    val zioLaminarTapir       = "1.0.0"
+    val zioLaminarTapir       = "1.1.0"
     val zioLogging            = "2.2.4"
     val zioMock               = "1.0.0-RC12"
     val zioPrelude            = "1.0.0-RC36"
@@ -96,7 +96,7 @@ object Dependencies {
 
   val clientLibraryDependencies: Setting[Seq[ModuleID]] =
     libraryDependencies ++= Seq(
-      // pull laminar 17.1.0
+      // pull laminar 17.1.1
       "dev.cheleb" %%% "laminar-form-derivation-ui5" % Versions.laminarFormDerivation,
       // pull tapir-sttp-client and zio-tapir
       "dev.cheleb"    %%% "zio-tapir-laminar" % Versions.zioLaminarTapir,
