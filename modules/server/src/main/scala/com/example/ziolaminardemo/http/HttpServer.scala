@@ -49,7 +49,6 @@ object HttpServer extends ZIOAppDefault {
              ) ++
                ZioHttpInterpreter(serverOptions)
                  .toHttp(metricsEndpoint :: webJarRoutes :: apiEndpoints ::: docEndpoints)
-
     } yield ()
 
   private val program =
