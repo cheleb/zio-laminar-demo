@@ -15,7 +15,7 @@ addSbtPlugin("org.playframework.twirl" % "sbt-twirl" % "2.0.9")
 // Cross project support, to spread project resources between js and jvm world
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.3.2")
 addSbtPlugin("com.github.sbt"     % "sbt-dynver"               % "5.1.1")
-addSbtPlugin("com.github.sbt"     % "sbt-unidoc"               % "0.5.0")
+addSbtPlugin("com.github.sbt"     % "sbt-unidoc"               % "0.6.0")
 addSbtPlugin("com.github.sbt"     % "sbt-ghpages"              % "0.8.0")
 // will reStart server on code modification.
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
