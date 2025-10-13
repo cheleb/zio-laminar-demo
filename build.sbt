@@ -15,9 +15,10 @@ name := "zio-laminar-demo"
 
 inThisBuild(
   List(
-    scalaVersion      := scala3,
-    semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
+    scalaVersion                            := scala3,
+    dependencyOverrides += "org.scala-lang" %% "scala3-library" % scala3,
+    semanticdbEnabled                       := true,
+    semanticdbVersion                       := scalafixSemanticdb.revision,
     scalacOptions ++= Seq(
       "-deprecation",
       "-feature",
@@ -50,7 +51,6 @@ lazy val root = project
 // It depends on sharedJs project, a project that contains shared code between server and client.
 //
 lazy val client = scalajsProject("client")
-  .enablePlugins(ScalablyTypedConverterExternalNpmPlugin)
   .settings(
     scalaJSUseMainModuleInitializer := true,
     scalaJSLinkerConfig ~= { config =>
@@ -68,7 +68,6 @@ lazy val client = scalajsProject("client")
   )
   .settings(scalacOptions ++= usedScalacOptions)
   .settings(clientLibraryDependencies)
-  .settings(externalNpm := baseDirectory.value / "scalablytyped")
   .dependsOn(sharedJs)
   .settings(
     publish / skip := true

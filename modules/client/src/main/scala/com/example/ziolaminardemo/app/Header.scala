@@ -86,7 +86,6 @@ object Header:
         .amend(
           onClick.mapTo(false) --> openPopoverBus
         ),
-      _.item(_.icon := IconName.`bar-chart`, a("Statistics", href := Router.uiRoute("demos/scalablytyped"))),
       _.item(_.icon := IconName.log, "Sign out").amend(
         onClick --> { _ =>
           session.clearUserState()

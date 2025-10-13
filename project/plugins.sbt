@@ -19,8 +19,6 @@ addSbtPlugin("com.github.sbt"     % "sbt-unidoc"               % "0.6.0")
 addSbtPlugin("com.github.sbt"     % "sbt-ghpages"              % "0.9.0")
 // will reStart server on code modification.
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
-// TypeScript support
-addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
  // Giter8 support
 addSbtPlugin("org.foundweekends.giter8" % "sbt-giter8-scaffold" % "0.18.0")
 // Scalafix

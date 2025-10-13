@@ -4,9 +4,6 @@ import com.raquo.laminar.api.L.*
 import frontroute.*
 
 import org.scalajs.dom
-
-import com.example.ziolaminardemo.app.demos.*
-
 object Router:
   val uiBase                     = "public"
   def uiRoute(segments: String*) = segments.mkString(s"/$uiBase/", "/", "")
@@ -30,11 +27,7 @@ object Router:
               },
               path("profile") {
                 profile.ProfilePage()
-              },
-              path("demos" / "scalablytyped") {
-                scalablytyped.ScalablytypedDemoPage()
-              }
-            )
+              })
           },
           noneMatched {
             div("404 Not Found")
