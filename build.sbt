@@ -9,7 +9,7 @@ import Dependencies._
 //
 import DeploymentSettings._
 
-val scala3 = "3.7.2"
+val scala3 = "3.7.3"
 
 name := "zio-laminar-demo"
 
@@ -136,8 +136,8 @@ def scalajsProject(projectId: String): Project =
       scalacOptions := Seq(
         "-scalajs",
         "-deprecation",
-        "-feature"
-//        "-Xfatal-warnings"
+        "-feature",
+        "-Xfatal-warnings"
       )
     )
 
