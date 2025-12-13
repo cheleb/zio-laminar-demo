@@ -23,7 +23,7 @@ jobs:
       - name: Install sbt
         uses: sbt/setup-sbt@v1
       - name: Restore cache SBT
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.ivy2/cache
@@ -34,7 +34,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-sbt-
       - name: Restore cache node
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             modules/client/node_modules
