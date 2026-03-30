@@ -9,7 +9,7 @@ import Dependencies._
 //
 import DeploymentSettings._
 
-val scala3 = "3.8.2"
+val scala3 = "3.8.3"
 
 name := "zio-laminar-demo"
 
