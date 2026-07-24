@@ -8,7 +8,7 @@ addSbtPlugin("ch.epfl.scala" % "sbt-web-scalajs-bundler" % "0.21.1")
 
 addSbtPlugin("org.scalameta"  % "sbt-scalafmt"        % "2.6.2")
 addSbtPlugin("com.github.sbt" % "sbt-ci-release"      % "1.12.0")
-addSbtPlugin("com.eed3si9n"   % "sbt-assembly"        % "2.4.0")
+addSbtPlugin("com.eed3si9n"   % "sbt-assembly"        % "2.4.1")
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.11.1")
 // Static file generator
 addSbtPlugin("org.playframework.twirl" % "sbt-twirl" % "2.0.9")
